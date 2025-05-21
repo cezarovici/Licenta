@@ -1,0 +1,5 @@
+Frontend Technology - Astro 
+Astro este un framework pentru a construi content-driven websites.
+
+astro vs next vs remix
+https://bejamas.com/blog/next-js-remix-and-astro-which-is-right-for-your-business 

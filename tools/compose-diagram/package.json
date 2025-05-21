@@ -1,0 +1,12 @@
+{
+    "name": "@tools/compose-diagram",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "diagrams-gen": "docker build -t tmp-diagram-generator -f diagram.Dockerfile . && docker run --rm --network=host -v .\\..\\..:/app -v diagrams:/diagrams tmp-diagram-generator"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

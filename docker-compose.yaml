@@ -1,0 +1,73 @@
+services:
+  serivice-discovery-server:
+    build:
+      context: ./ServiceDiscoveryServer
+      dockerfile: ./Dockerfile
+    ports:
+      - 8761:8761
+    networks:
+      - app-network
+
+  api-gateway:
+    build:
+      context: ./ApiGateway
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - serivice-discovery-server
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Frontend/Dockerfile
+    ports:
+      - 4321:4321
+    networks:
+      - app-network
+
+  auth-server:
+    build:
+      context: ./AuthServer
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      - serivice-discovery-server
+      - auth-server-db
+    networks:
+      - app-network
+
+    volumes:
+      - db-data:/etc/data
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-server-db:5432/authdatabase
+      SPRING_DATASOURCE_USERNAME: authuser
+      SPRING_DATASOURCE_PASSWORD: authpassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  auth-server-db:
+    image: postgres
+    restart: always
+    container_name: auth-server-db
+
+    environment:
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpassword
+      POSTGRES_DB: authdatabase
+
+    ports:
+      - 5432:5432
+
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+
+networks:
+  app-network:
+    driver: bridge

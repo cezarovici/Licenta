@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* styles.css */
+:root {
+  --color-primary: #4f46e5; /* Indigo 600 */
+  --color-primary-hover: #4338ca; /* Indigo 500 */
+  --color-text-dark: #303135; /* Gray 900 */
+  --color-text-light: #6b7280; /* Gray 500 */
+  --color-border: #d1d5db; /* Gray 300 */
+  --color-bg-light: #ffffff; /* White */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
+}

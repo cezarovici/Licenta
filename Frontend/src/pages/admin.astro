@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getUsers } from "../lib/mock_users";
+const users = getUsers();
+---
+
+<Layout title="Admin Dashboard">
+  <div class="max-w-6xl mx-auto py-8 px-4">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-8">User Management</h1>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+      <table class="min-w-full table-auto">
+        <thead
+          class="bg-gray-100 text-gray-700 uppercase text-sm leading-normal"
+        >
+          <tr>
+            <th class="py-3 px-6 text-left">Username</th>
+            <th class="py-3 px-6 text-left">Email</th>
+            <th class="py-3 px-6 text-left">Role</th>
+            <th class="py-3 px-6 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          {
+            users.map((user) => (
+              <tr
+                key={user.id}
+                class="border-b border-gray-200 hover:bg-gray-100 transition"
+              >
+                <td class="py-3 px-6 text-left whitespace-nowrap">
+                  <span class="font-medium">{user.username}</span>
+                </td>
+                <td class="py-3 px-6 text-left">{user.email}</td>
+                <td class="py-3 px-6 text-left">
+                  <span
+                    class={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      user.role === "ADMIN"
+                        ? "bg-red-100 text-red-600"
+                        : user.role === "MODERATOR"
+                          ? "bg-blue-100 text-blue-600"
+                          : user.role === "USER"
+                            ? "bg-green-100 text-green-600"
+                            : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {user.role}
+                  </span>
+                </td>
+                <td class="py-3 px-6 text-left">
+                  <span
+                    class={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      user.isEnabled
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {user.isEnabled ? "Active" : "Inactive"}
+                  </span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
