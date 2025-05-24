@@ -29,6 +29,29 @@ services:
       - service-discovery-server
     networks:
       - app-network
+    
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://core-functionality-db:5432/coredatabase
+      SPRING_DATASOURCE_USERNAME: coreuser
+      SPRING_DATASOURCE_PASSWORD: corepassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+  core-functionality-db:
+    image: postgres
+    restart: always
+    container_name: core-functionality-db
+
+    environment:
+      POSTGRES_USER: coreuser
+      POSTGRES_PASSWORD: corepassword
+      POSTGRES_DB: coredatabase
+
+    ports:
+      - 5433:5432
+
+    networks:
+      - app-network
+
 
 
   frontend:
@@ -75,6 +98,8 @@ services:
 
     networks:
       - app-network
+
+
 
 volumes:
   db-data:
