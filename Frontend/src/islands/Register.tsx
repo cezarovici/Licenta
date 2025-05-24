@@ -1,46 +1,63 @@
 import { useState } from "react";
+import { registerUser } from "../lib/auth/register";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("USER"); // Default role
+  const [authorities, setRole] = useState<string[]>(["USER"]);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState("");
 
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    username?: string;
+    password?: string;
+  }>({});
+
+  const validateForm = () => {
+    const errors: typeof fieldErrors = {};
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      errors.email = "Emailul nu este valid";
+    }
+
+    if (username.trim().length < 3) {
+      errors.username = "Username-ul trebuie să aibă cel puțin 3 caractere";
+    }
+
+    if (password.length < 6) {
+      errors.password = "Parola trebuie să aibă cel puțin 6 caractere";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setError("");
     setSuccess("");
 
+    if (!validateForm()) return;
+
     try {
-      const response = await fetch("http://localhost:8080/idm/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          username,
-          password,
-          authorities: [role],
-        }),
+      const data = await registerUser({
+        email,
+        username,
+        password,
+        authorities,
       });
 
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
-
-      const data = await response.json();
-      console.log("Registration successful:", data);
-
       setSuccess("Account created successfully! You can now log in.");
-    } catch (err) {
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } catch (err: any) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setError("A aparut o eroare la server");
       }
     }
   };
@@ -60,6 +77,10 @@ export default function RegisterForm() {
 
           {/* Email */}
           <div>
+            {fieldErrors.email && (
+              <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+            )}
+
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-900"
@@ -68,7 +89,7 @@ export default function RegisterForm() {
             </label>
             <input
               id="email"
-              name="email`"
+              name="email"
               type="email"
               required
               value={email}
@@ -85,6 +106,10 @@ export default function RegisterForm() {
             >
               Username
             </label>
+            {fieldErrors.username && (
+              <p className="text-red-500 text-sm">{fieldErrors.username}</p>
+            )}
+
             <input
               id="username"
               name="username"
@@ -104,9 +129,13 @@ export default function RegisterForm() {
             >
               Password
             </label>
+            {fieldErrors.password && (
+              <p className="text-red-500 text-sm">{fieldErrors.password}</p>
+            )}
+
             <input
               id="password"
-              name="password    "
+              name="password"
               type="password"
               required
               value={password}

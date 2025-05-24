@@ -1,36 +1,30 @@
 import { useState } from "react";
+import { loginUser } from "../lib/auth/login";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch("http://localhost:8080/idm/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
-
-      const data = await response.json();
+      const data = await loginUser({ username, password });
       localStorage.setItem("token", data.token);
-      console.log("Login successful, token:", data.token);
+      setSuccess("Logged in successfully! Redirecting...");
 
-      window.location.href = "/";
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setError("A apărut o eroare neașteptată.");
       }
     }
   };
@@ -45,8 +39,16 @@ export default function LoginForm() {
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleLogin} className="space-y-6">
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
+          {error && (
+            <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="rounded-md bg-green-100 p-3 text-sm text-green-700">
+              {success}
+            </div>
+          )}
           <div>
             <label
               htmlFor="username"
