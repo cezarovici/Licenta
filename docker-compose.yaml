@@ -1,5 +1,5 @@
 services:
-  serivice-discovery-server:
+  service-discovery-server: 
     build:
       context: ./ServiceDiscoveryServer
       dockerfile: ./Dockerfile
@@ -15,9 +15,21 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - serivice-discovery-server
+      - service-discovery-server
     networks:
       - app-network
+
+  core-functionality:
+    build:
+      context: ./Core
+      dockerfile: ./Dockerfile
+    ports:
+      - 8083:8083
+    depends_on:
+      - service-discovery-server
+    networks:
+      - app-network
+
 
   frontend:
     build:
@@ -35,7 +47,7 @@ services:
     ports:
       - 8081:8081
     depends_on:
-      - serivice-discovery-server
+      - service-discovery-server
       - auth-server-db
     networks:
       - app-network
