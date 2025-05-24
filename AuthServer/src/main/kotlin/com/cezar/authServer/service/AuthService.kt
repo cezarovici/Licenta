@@ -5,10 +5,13 @@ import com.cezar.authServer.dto.LoginUserDto
 import com.cezar.authServer.dto.RegisterUserDto
 import com.cezar.authServer.entity.UserEntity
 import com.cezar.authServer.repository.UserInfoRepository
+import org.apache.http.auth.InvalidCredentialsException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @Service
@@ -29,35 +32,38 @@ class AuthService : UserDetailsService{
     }
 
     fun signup(input: RegisterUserDto): UserEntity {
-        if (userRepository.findByUsername(input.username) != null) {
-            throw IllegalStateException("User with username ${input.username} already exists")
-        }
+            if (userRepository.findByUsername(input.username) != null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Username ${input.username} already exists")
+            }
+            if (userRepository.findByEmail(input.email) != null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email ${input.email} already exists")
+            }
 
-        val hashedPassword = passwordEncoder.encode(input.password)
-        val roles = input.getRoles()
+            val hashedPassword = passwordEncoder.encode(input.password)
+            val roles = input.getRoles()
 
-        val user = UserEntity(
-            email = input.email,
-            username = input.username,
-            password = hashedPassword,
-            isEnabled = true,
-            isCredentialsNonExpired = true,
-            isAccountNonExpired = true,
-            isAccountNonLocked = true,
-            authorities = roles,
-            createdAt = Date(),
-            updatedAt = Date()
-        )
+            val user = UserEntity(
+                email = input.email,
+                username = input.username,
+                password = hashedPassword,
+                isEnabled = true,
+                isCredentialsNonExpired = true,
+                isAccountNonExpired = true,
+                isAccountNonLocked = true,
+                authorities = roles,
+                createdAt = Date(),
+                updatedAt = Date()
+            )
 
-        return userRepository.save(user)
+            return userRepository.save(user)
     }
 
     fun signin(input: LoginUserDto): LoginResponseDto {
         val user = userRepository.findByUsername(input.username)
-            ?: throw IllegalArgumentException("Invalid username or password")
+            ?: throw InvalidCredentialsException("Invalid username")
 
         if (!passwordEncoder.matches(input.password, user.password)) {
-            throw IllegalArgumentException("Invalid username or password")
+            throw InvalidCredentialsException("Invalid password")
         }
 
         val token = jwtService.generateToken(user)
