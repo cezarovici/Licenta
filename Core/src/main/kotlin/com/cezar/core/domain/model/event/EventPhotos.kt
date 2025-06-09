@@ -1,4 +1,4 @@
-package com.cezar.core.entities.event
+package com.cezar.core.domain.model.event
 
 import jakarta.persistence.*
 
@@ -17,5 +17,5 @@ open class EventPhotos(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    var event: com.cezar.core.entities.event.EventEntity? = null
+    var event: com.cezar.core.domain.model.event.EventEntity? = null
 )

@@ -1,4 +1,4 @@
-package com.cezar.core.entities.locations
+package com.cezar.core.domain.model.locations
 
 import jakarta.persistence.*
 

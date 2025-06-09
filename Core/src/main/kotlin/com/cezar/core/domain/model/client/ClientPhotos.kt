@@ -1,4 +1,4 @@
-package com.cezar.core.entities.client
+package com.cezar.core.domain.model.client
 
 import jakarta.persistence.*
 
@@ -13,5 +13,5 @@ class ClientPhotoEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    var client: com.cezar.core.entities.client.ClientEntity? = null
+    var client: com.cezar.core.domain.model.client.ClientEntity? = null
 )

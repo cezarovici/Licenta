@@ -22,6 +22,12 @@ class JwtAuthenticationFilter : GlobalFilter, Ordered {
         val request = exchange.request
         val authHeader = request.headers.getFirst(HttpHeaders.AUTHORIZATION)
 
+        val path = request.uri.path
+
+        if (path.startsWith("/idm/auth/login") || path.startsWith("/idm/auth/signup")) {
+            return chain.filter(exchange)
+        }
+
         if (authHeader.isNullOrBlank() || !authHeader.startsWith("Bearer ")) {
             exchange.response.statusCode = HttpStatus.UNAUTHORIZED
             return exchange.response.setComplete()

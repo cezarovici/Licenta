@@ -1,7 +1,28 @@
 ---
-import RegisterForm from "../islands/Register";
 import Layout from "../layouts/Layout.astro";
+import RegistrationWizard from "../components/registration/RegistrationWizard";
 ---
 
-<Layout title="Reguster" />
-<RegisterForm client:load />
+<Layout title="Create Your Account">
+  <main
+    class="bg-slate-900 min-h-screen flex items-center justify-center py-10 px-4"
+  >
+    <RegistrationWizard client:load />
+  </main>
+</Layout>
+
+<style is:global>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+</style>

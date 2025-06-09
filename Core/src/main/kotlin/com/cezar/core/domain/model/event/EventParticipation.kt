@@ -1,6 +1,6 @@
-package com.cezar.core.entities.event
+package com.cezar.core.domain.model.event
 
-import com.cezar.core.entities.client.ClientEntity
+import com.cezar.core.domain.model.client.ClientEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -16,11 +16,11 @@ open class EventParticipation(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    var event: com.cezar.core.entities.event.EventEntity? = null,
+    var event: com.cezar.core.domain.model.event.EventEntity? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    var client: com.cezar.core.entities.client.ClientEntity,
+    var client: com.cezar.core.domain.model.client.ClientEntity,
 
     @Column(name = "join_date_time", nullable = false, updatable = false)
     val joinDateTime: LocalDateTime = LocalDateTime.now()

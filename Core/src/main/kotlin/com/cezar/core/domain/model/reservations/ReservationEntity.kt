@@ -1,6 +1,6 @@
-package com.cezar.core.entities.reservations
+package com.cezar.core.domain.model.reservations
 
-import com.cezar.core.entities.event.EventEntity
+import com.cezar.core.domain.model.event.EventEntity
 import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -14,11 +14,11 @@ open class ReservationEntity(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "event_id")
-    var event: com.cezar.core.entities.event.EventEntity? = null,
+    var event: com.cezar.core.domain.model.event.EventEntity? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var status: com.cezar.core.entities.reservations.ReservationStatus = com.cezar.core.entities.reservations.ReservationStatus.PENDING_CONFIRMATION,
+    var status: com.cezar.core.domain.model.reservations.ReservationStatus = com.cezar.core.domain.model.reservations.ReservationStatus.PENDING_CONFIRMATION,
 
     @Column(name = "total_cost", nullable = false)
     var totalCost: BigDecimal = BigDecimal.ZERO,
@@ -31,7 +31,7 @@ open class ReservationEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    var paymentMethod: com.cezar.core.entities.reservations.PaymentMethod? = null,
+    var paymentMethod: com.cezar.core.domain.model.reservations.PaymentMethod? = null,
 
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -40,10 +40,10 @@ open class ReservationEntity(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @OneToOne(mappedBy = "reservation", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var details: com.cezar.core.entities.reservations.ReservationDetails? = null
+    var details: com.cezar.core.domain.model.reservations.ReservationDetails? = null
 
 ) {
-    fun addDetails(details: com.cezar.core.entities.reservations.ReservationDetails) {
+    fun addDetails(details: com.cezar.core.domain.model.reservations.ReservationDetails) {
         this.details = details
         details.reservation = this
     }

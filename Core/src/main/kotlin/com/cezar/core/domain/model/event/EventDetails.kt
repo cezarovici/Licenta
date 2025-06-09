@@ -1,4 +1,4 @@
-package com.cezar.core.entities.event
+package com.cezar.core.domain.model.event
 
 import jakarta.persistence.*
 import java.math.BigDecimal
@@ -12,7 +12,7 @@ open class EventDetails(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "event_id")
-    var event: com.cezar.core.entities.event.EventEntity? = null,
+    var event: com.cezar.core.domain.model.event.EventEntity? = null,
 
     @Lob
     var description: String? = null,
@@ -25,5 +25,5 @@ open class EventDetails(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "skill_level", nullable = false)
-    var skillLevel: com.cezar.core.entities.event.SkillLevel = com.cezar.core.entities.event.SkillLevel.ALL_LEVELS
+    var skillLevel: com.cezar.core.domain.model.event.SkillLevel = com.cezar.core.domain.model.event.SkillLevel.ALL_LEVELS
 )

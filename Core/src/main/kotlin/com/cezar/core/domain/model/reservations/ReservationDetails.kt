@@ -1,4 +1,4 @@
-package com.cezar.core.entities.reservations
+package com.cezar.core.domain.model.reservations
 
 import jakarta.persistence.*
 
@@ -11,7 +11,7 @@ open class ReservationDetails(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "reservation_id")
-    var reservation: com.cezar.core.entities.reservations.ReservationEntity? = null,
+    var reservation: com.cezar.core.domain.model.reservations.ReservationEntity? = null,
 
     @Column(name = "payment_transaction_id")
     var paymentTransactionId: String? = null,

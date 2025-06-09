@@ -1,4 +1,4 @@
-package com.cezar.core.entities.locations
+package com.cezar.core.domain.model.locations
 
 import jakarta.persistence.*
 
@@ -17,5 +17,5 @@ open class LocationPhotos(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    var location: com.cezar.core.entities.locations.LocationEntity? = null
+    var location: com.cezar.core.domain.model.locations.LocationEntity? = null
 )

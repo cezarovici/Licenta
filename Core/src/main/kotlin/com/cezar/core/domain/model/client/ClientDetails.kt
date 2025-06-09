@@ -1,7 +1,7 @@
-package com.cezar.core.entities.client
+package com.cezar.core.domain.model.client
 
-import com.cezar.core.entities.event.EventEntity
-import com.cezar.core.entities.event.EventParticipation
+import com.cezar.core.domain.model.event.EventEntity
+import com.cezar.core.domain.model.event.EventParticipation
 import jakarta.persistence.*
 
 @Entity

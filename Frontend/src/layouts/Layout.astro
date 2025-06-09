@@ -12,17 +12,22 @@ import "../styles/global.css";
     <meta name="generator" content={Astro.generator} />
     <title>SportHub</title>
   </head>
-  <body>
-    <NavigationBar />
-    <slot />
-  </body>
-</html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
+  {
+    (
+      <body class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+        <NavigationBar />
+        <slot />
+      </body>
+    )
   }
-</style>
+
+  <style is:global>
+    /* Poți păstra stilurile globale care NU sunt legate de Tailwind aici */
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</html>

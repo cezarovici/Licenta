@@ -1,4 +1,4 @@
-package com.cezar.core.entities.event
+package com.cezar.core.domain.model.event
 
 enum class EventStatus {
     PLANNED,

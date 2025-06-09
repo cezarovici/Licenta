@@ -1,4 +1,4 @@
-package com.cezar.core.entities.business
+package com.cezar.core.domain.model.business
 
 import jakarta.persistence.*
 
@@ -11,7 +11,7 @@ open class BusinessDetails(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "business_id")
-    var business: com.cezar.core.entities.business.BusinessEntity? = null,
+    var business: com.cezar.core.domain.model.business.BusinessEntity? = null,
 
     @Lob
     @Column(nullable = true)

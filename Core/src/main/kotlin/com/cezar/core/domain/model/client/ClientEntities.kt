@@ -1,7 +1,6 @@
-package com.cezar.core.entities.client
+package com.cezar.core.domain.model.client
 
-import com.cezar.core.entities.event.EventEntity
-import com.cezar.core.entities.event.EventParticipation
+
 import jakarta.persistence.*
 
 @Entity
@@ -23,11 +22,11 @@ class ClientEntity(
     var lastName: String,
 
     @OneToMany(mappedBy = "creator", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var createdEvents: MutableSet<com.cezar.core.entities.event.EventEntity> = mutableSetOf(),
+    var createdEvents: MutableSet<com.cezar.core.domain.model.event.EventEntity> = mutableSetOf(),
 
     @OneToMany(mappedBy = "client")
-    var participations: MutableSet<com.cezar.core.entities.event.EventParticipation> = mutableSetOf(),
+    var participations: MutableSet<com.cezar.core.domain.model.event.EventParticipation> = mutableSetOf(),
 
     @OneToMany(mappedBy = "client", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<com.cezar.core.entities.client.ClientPhotoEntity> = mutableSetOf(),
+    var photos: MutableSet<com.cezar.core.domain.model.client.ClientPhotoEntity> = mutableSetOf(),
 )

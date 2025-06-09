@@ -1,4 +1,4 @@
-package com.cezar.core.entities.business
+package com.cezar.core.domain.model.business
 
 import jakarta.persistence.*
 
@@ -17,5 +17,5 @@ open class BusinessPhotoEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id", nullable = false)
-    var business: com.cezar.core.entities.business.BusinessEntity? = null
+    var business: com.cezar.core.domain.model.business.BusinessEntity? = null
 )
