@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.math.BigDecimal
 
 @Entity
-@Table(name = "event_details", schema = "core")
+@Table(name = "event_details")
 open class EventDetails(
     @Id
     var id: Long? = null,
@@ -12,7 +12,7 @@ open class EventDetails(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "event_id")
-    var event: com.cezar.core.domain.model.event.EventEntity? = null,
+    var event: EventEntity? = null,
 
     @Lob
     var description: String? = null,
@@ -25,5 +25,5 @@ open class EventDetails(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "skill_level", nullable = false)
-    var skillLevel: com.cezar.core.domain.model.event.SkillLevel = com.cezar.core.domain.model.event.SkillLevel.ALL_LEVELS
+    var skillLevel: SkillLevel = SkillLevel.ALL_LEVELS
 )

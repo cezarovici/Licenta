@@ -49,5 +49,4 @@ class JwtFilter : OncePerRequestFilter() {
 
         filterChain.doFilter(request, response)
     }
-
 }

@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.business
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "business_details", schema = "core")
+@Table(name = "business_details")
 open class BusinessDetails(
     @Id
     var id: Long? = null,
@@ -11,7 +11,7 @@ open class BusinessDetails(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "business_id")
-    var business: com.cezar.core.domain.model.business.BusinessEntity? = null,
+    var business: BusinessEntity? = null,
 
     @Lob
     @Column(nullable = true)

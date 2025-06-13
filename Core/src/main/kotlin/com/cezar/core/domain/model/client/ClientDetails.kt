@@ -1,17 +1,31 @@
 package com.cezar.core.domain.model.client
 
-import com.cezar.core.domain.model.event.EventEntity
-import com.cezar.core.domain.model.event.EventParticipation
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
-@Table(name = "client_details", schema = "core")
+@Table(name = "client_details")
 class ClientDetails(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     var id: Long? = null,
 
-    @Lob
-    var bio: String? = null,
-){
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "client_id")
+    var client: ClientEntity? = null,
 
-}
+    @Column(name="bio")
+    var bio: String? = null,
+
+    @Column(name = "date_of_birth")
+    var dateOfBirth: LocalDate? = null,
+
+    @Column
+    var city: String? = null,
+
+    @Column(name = "favorite_sports")
+    var favoriteSports: String? = null,
+
+    @Column
+    var availability: String? = null,
+)

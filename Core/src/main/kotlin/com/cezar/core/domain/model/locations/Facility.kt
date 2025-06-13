@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.locations
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "facilities", schema = "core")
+@Table(name = "facilities")
 open class Facility(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

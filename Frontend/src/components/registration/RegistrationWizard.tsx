@@ -1,15 +1,14 @@
-// src/components/registration/RegistrationWizard.tsx
-
 import React, { useState } from "react";
 import AccountTypeSelector from "./AccountTypeSelector";
 import ClientRegistrationForm from "./ClientRegistrationForm";
-// Importăm noile componente
+
 import BusinessCoreDetailsForm from "./BusinessCoreDetailsForm";
 import LocationForm from "./LocationForm";
 import BusinessConfirmationStep from "./BusinessConfirmationStep";
-// Importăm și componentele pentru client
+
 import ProfileDetailsForm from "./ProfileDetailsForm";
 import ConfirmationStep from "./ConfirmationStep";
+import { registerClientAccount } from "../../lib/register/register_client";
 
 const initialFormData = {
   firstName: "",
@@ -30,6 +29,8 @@ export default function RegistrationWizard() {
     null
   );
   const [formData, setFormData] = useState(initialFormData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,22 +42,30 @@ export default function RegistrationWizard() {
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isLastClientStep = accountType === "CLIENT" && step === 3;
-    const isLastBusinessStep = accountType === "BUSINESS" && step === 4;
 
     if (isLastClientStep) {
-      console.log("FINAL SUBMIT - CLIENT:", formData);
-      alert("Client Account created! (Check console)");
-    } else if (isLastBusinessStep) {
-      console.log("FINAL SUBMIT - BUSINESS:", formData);
-      alert("Business Account created! (Check console)");
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Aici este cheia: trimitem întregul obiect formData care conține tot.
+        // Ne asigurăm că `registerClientAccount` așteaptă acest tip de obiect.
+        const result = await registerClientAccount(formData);
+
+        console.log("Account created successfully:", result);
+        handleNext(); // Trecem la pasul de succes
+      } catch (err: any) {
+        setError(err.message || "Something went wrong.");
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       handleNext();
     }
   };
-
   const handleSelectType = (type: "CLIENT" | "BUSINESS") => {
     setAccountType(type);
     setStep(1);
@@ -189,7 +198,11 @@ export default function RegistrationWizard() {
                 </>
               )}
             </div>
-
+            {error && (
+              <div className="mt-4 p-3 bg-red-900/50 border border-red-500 rounded-md text-sm text-red-300">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
             {renderNavigationButtons()}
           </form>
         </div>

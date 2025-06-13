@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.business
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "business_photos", schema = "core")
+@Table(name = "business_photos")
 open class BusinessPhotoEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +17,5 @@ open class BusinessPhotoEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id", nullable = false)
-    var business: com.cezar.core.domain.model.business.BusinessEntity? = null
+    var business: BusinessEntity? = null
 )

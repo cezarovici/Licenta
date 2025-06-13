@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.reservations
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "reservation_details", schema = "core")
+@Table(name = "reservation_details")
 open class ReservationDetails(
     @Id
     var id: Long? = null,

@@ -1,12 +1,12 @@
 package com.cezar.authServer.service
 
+import com.cezar.authServer.entity.UserEntity
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.util.*
@@ -28,20 +28,21 @@ class JwtService {
         return claimsResolver(claims)
     }
 
-    fun generateToken(userDetails: UserDetails): String {
+    fun generateToken(userDetails: UserEntity): String {
         val extraClaims = mapOf(
-            "roles" to userDetails.authorities.map { it.authority }
+            "roles" to userDetails.authorities.map { it.authority },
+            "accountId" to userDetails.getId()
         )
         return generateToken(extraClaims, userDetails)
     }
 
-    fun generateToken(extraClaims: Map<String, Any?>?, userDetails: UserDetails?): String {
+    fun generateToken(extraClaims: Map<String, Any?>?, userDetails: UserEntity?): String {
         return buildToken(extraClaims!!, userDetails!!, jwtExpiration)
     }
 
     private fun buildToken(
         extraClaims: Map<String, Any?>,
-        userDetails: UserDetails,
+        userDetails: UserEntity,
         expiration: Long
     ): String {
         return Jwts
@@ -54,11 +55,10 @@ class JwtService {
             .compact()
     }
 
-    fun isTokenValid(token: String?, userDetails: UserDetails): Boolean {
+    fun isTokenValid(token: String?, userDetails: UserEntity): Boolean {
         val username: String = extractUsername(token)
         return (username == userDetails.username) && !isTokenExpired(token!!)
     }
-
 
     private fun isTokenExpired(token: String): Boolean {
         return extractExpiration(token).before(Date())

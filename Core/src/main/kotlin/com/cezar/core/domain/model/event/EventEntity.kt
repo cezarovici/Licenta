@@ -6,7 +6,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "events", schema = "core")
+@Table(name = "events")
 open class EventEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,6 @@ open class EventEntity(
 
     @Column(name = "event_date_time", nullable = false)
     var eventDateTime: LocalDateTime,
-    // Câmpul nou care face distincția între public și privat
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -28,41 +27,41 @@ open class EventEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var status: com.cezar.core.domain.model.event.EventStatus = com.cezar.core.domain.model.event.EventStatus.PLANNED,
+    var status: EventStatus = EventStatus.PLANNED,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
-    var creator: com.cezar.core.domain.model.client.ClientEntity,
+    var creator:ClientEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    var location: com.cezar.core.domain.model.locations.LocationEntity,
+    var location: LocationEntity,
 
     @OneToOne(mappedBy = "event", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = false)
-    var details: com.cezar.core.domain.model.event.EventDetails? = null,
+    var details: EventDetails? = null,
 
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var participations: MutableSet<com.cezar.core.domain.model.event.EventParticipation> = mutableSetOf(),
+    var participations: MutableSet<EventParticipation> = mutableSetOf(),
 
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<com.cezar.core.domain.model.event.EventPhotos> = mutableSetOf()
+    var photos: MutableSet<EventPhotos> = mutableSetOf()
 ) {
-    fun addDetails(details: com.cezar.core.domain.model.event.EventDetails) {
+    fun addDetails(details: EventDetails) {
         this.details = details
         details.event = this
     }
 
-    fun addParticipation(participation: com.cezar.core.domain.model.event.EventParticipation) {
+    fun addParticipation(participation: EventParticipation) {
         this.participations.add(participation)
         participation.event = this
     }
 
-    fun removeParticipation(participation: com.cezar.core.domain.model.event.EventParticipation) {
+    fun removeParticipation(participation:EventParticipation) {
         this.participations.remove(participation)
         participation.event = null
     }
 
-    fun addPhoto(photo: com.cezar.core.domain.model.event.EventPhotos) {
+    fun addPhoto(photo: EventPhotos) {
         this.photos.add(photo)
         photo.event = this
     }

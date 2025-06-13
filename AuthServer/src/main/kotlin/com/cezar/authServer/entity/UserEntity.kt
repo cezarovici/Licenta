@@ -50,6 +50,7 @@ data class UserEntity(
     override fun isEnabled(): Boolean = isEnabled
 
     fun getId(): Long = id
+    fun getEmail() : String = email
 
     fun toDTO(): UserDTO {
         return UserDTO(

@@ -4,13 +4,13 @@ package com.cezar.core.domain.model.client
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "clients",  schema = "core")
+@Table(name = "clients")
 class ClientEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @Column(unique = true, nullable = false)
-    var email: String,
+    @Column(nullable = false, name = "account_id")
+    val accountId: Long,
 
     @Column(nullable = false)
     var profilePhotoUrl: String,
@@ -29,4 +29,14 @@ class ClientEntity(
 
     @OneToMany(mappedBy = "client", cascade = [CascadeType.ALL], orphanRemoval = true)
     var photos: MutableSet<com.cezar.core.domain.model.client.ClientPhotoEntity> = mutableSetOf(),
+
+    @OneToOne(mappedBy = "client", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, optional = false)
+    var details: ClientDetails? = null,
 )
+{
+    fun addDetails(details: ClientDetails) {
+        this.details = details
+        details.client = this
+    }
+
+}

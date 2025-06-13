@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "reservations", schema = "core")
+@Table(name = "reservations")
 open class ReservationEntity(
     @Id
     var id: Long? = null,

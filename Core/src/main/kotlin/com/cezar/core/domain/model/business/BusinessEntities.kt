@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.business
 import jakarta.persistence.*
 import java.time.LocalDateTime
 @Entity
-@Table(name = "business", schema = "core")
+@Table(name = "business")
 open class BusinessEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,22 +25,22 @@ open class BusinessEntity(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @OneToOne(mappedBy = "business", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = false)
-    var details: com.cezar.core.domain.model.business.BusinessDetails? = null,
+    var details: BusinessDetails? = null,
 
     @OneToMany(mappedBy = "business", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<com.cezar.core.domain.model.business.BusinessPhotoEntity> = mutableSetOf()
+    var photos: MutableSet<BusinessPhotoEntity> = mutableSetOf()
 ) {
-    fun addDetails(details: com.cezar.core.domain.model.business.BusinessDetails) {
+    fun addDetails(details: BusinessDetails) {
         this.details = details
         details.business = this
     }
 
-    fun addPhoto(photo: com.cezar.core.domain.model.business.BusinessPhotoEntity) {
+    fun addPhoto(photo: BusinessPhotoEntity) {
         photos.add(photo)
         photo.business = this
     }
 
-    fun removePhoto(photo: com.cezar.core.domain.model.business.BusinessPhotoEntity) {
+    fun removePhoto(photo: BusinessPhotoEntity) {
         photos.remove(photo)
         photo.business = null
     }

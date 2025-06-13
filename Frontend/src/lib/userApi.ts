@@ -1,71 +1,57 @@
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
-  isEnabled: boolean;
-  authorities: string[];
+/**
+ * Interfața care corespunde cu ClientProfileDTO din backend.
+ * Reprezintă datele profilului unui client.
+ */
+export interface ClientProfile {
+  accountId: number;
+  firstName: string;
+  lastName: string;
+  profilePhotoUrl: string;
+  bio: string | null; // Bio poate fi null
 }
 
 /**
- * Get current user's profile
+ * Prelucrează profilul utilizatorului curent autentificat.
+ * Această funcție presupune că, la login, atât token-ul JWT, cât și ID-ul contului
+ * sunt salvate în localStorage.
  */
-export const getProfile = async (): Promise<User> => {
+export const getCurrentUserProfile = async (): Promise<ClientProfile> => {
+  // Verificăm dacă suntem în contextul browser-ului
   if (typeof window === "undefined") {
     throw new Error("localStorage is not available on the server side");
   }
 
+  // Preluăm token-ul pentru autorizare
   const token = localStorage.getItem("token");
+  // Preluăm ID-ul contului pentru a construi URL-ul
+
+  console.log(token);
 
   if (!token) {
-    throw new Error("User is not authenticated.");
+    throw new Error("User is not authenticated. No token found.");
   }
 
-  const response = await fetch("http://localhost:8080/idm/user/me", {
+  // Construim URL-ul către noul endpoint din `core-functionality`,
+  // care este expus prin API Gateway pe portul 8080.
+  const apiUrl = `http://localhost:8080/api/profiles/me`;
+
+  const response = await fetch(apiUrl, {
     method: "GET",
     headers: {
+      // Antetul de autorizare este încă necesar, deoarece cererea trece prin API Gateway,
+      // care probabil securizează rutele.
       Authorization: `Bearer ${token}`,
     },
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch profile");
+    // Dacă primim 404, aruncăm o eroare specifică. Altfel, una generică.
+    if (response.status === 404) {
+      throw new Error("User profile not found.");
+    }
+    throw new Error("Failed to fetch user profile.");
   }
 
+  // Returnăm datele de profil parsate ca JSON.
   return await response.json();
-};
-
-/**
- * Update current user's profile
- */
-export const updateProfile = async (userData: Partial<User>): Promise<User> => {
-  const response = await fetch("http://localhost:8080/idm/user/me", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to update profile");
-  }
-
-  const user: User = await response.json();
-  return user;
-};
-
-/**
- * Delete current user's profile
- */
-export const deleteProfile = async (): Promise<void> => {
-  const response = await fetch("http://localhost:8080/idm/user/me", {
-    method: "DELETE",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to delete profile");
-  }
 };

@@ -5,7 +5,7 @@ import java.time.DayOfWeek
 import java.time.LocalTime
 
 @Entity
-@Table(name = "operating_hours", schema = "core")
+@Table(name = "operating_hours")
 open class OperatingHour(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,7 @@ open class OperatingHour(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    var location: com.cezar.core.domain.model.locations.LocationEntity? = null,
+    var location: LocationEntity? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)

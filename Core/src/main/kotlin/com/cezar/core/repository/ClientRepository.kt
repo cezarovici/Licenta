@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ClientRepository : JpaRepository<ClientEntity, Long> {
-    fun findByEmail(email: String): ClientEntity?
+    fun findByAccountId(accountId: Long): ClientEntity?
 }

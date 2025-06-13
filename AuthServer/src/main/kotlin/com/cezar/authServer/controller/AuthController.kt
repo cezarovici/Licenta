@@ -1,5 +1,6 @@
 package com.cezar.authServer.controller
 
+import com.cezar.authServer.dto.AuthUserResponseDTO
 import com.cezar.authServer.dto.LoginUserDto
 import com.cezar.authServer.dto.RegisterUserDto
 import com.cezar.authServer.entity.UserEntity
@@ -27,8 +28,15 @@ class AuthController {
     }
 
     @PostMapping("/signup")
-    fun register(@RequestBody registerUserDto: RegisterUserDto): ResponseEntity<UserEntity> {
-        val registeredUser = authUserService.signup(registerUserDto)
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser)
+    fun register(@RequestBody registerUserDto: RegisterUserDto): ResponseEntity<AuthUserResponseDTO> {
+        val registeredUser: UserEntity = authUserService.signup(registerUserDto)
+
+        val responseDto = AuthUserResponseDTO(
+            id = registeredUser.getId(),
+            email = registeredUser.getEmail(),
+            username = registeredUser.username
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto)
     }
 }

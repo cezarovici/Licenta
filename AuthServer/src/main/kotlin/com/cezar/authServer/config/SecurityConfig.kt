@@ -38,6 +38,7 @@ class SecurityConfig {
 
             .authorizeHttpRequests {
                 it.requestMatchers("/idm/auth/**").permitAll()
+                it.requestMatchers("/api/register/client").permitAll()
                 it.requestMatchers("/api-docs/**").permitAll()
                 it.requestMatchers("/swagger-ui/**").permitAll()
                 it.requestMatchers("/idm/admin/**").hasRole("ADMIN")

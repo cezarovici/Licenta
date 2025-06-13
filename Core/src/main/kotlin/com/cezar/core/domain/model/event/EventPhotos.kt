@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.event
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "event_photos", schema = "core")
+@Table(name = "event_photos")
 open class EventPhotos(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +17,5 @@ open class EventPhotos(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    var event: com.cezar.core.domain.model.event.EventEntity? = null
+    var event: EventEntity? = null
 )

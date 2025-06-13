@@ -3,7 +3,7 @@ package com.cezar.core.domain.model.locations
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "location_photos", schema = "core")
+@Table(name = "location_photos")
 open class LocationPhotos(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +17,5 @@ open class LocationPhotos(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    var location: com.cezar.core.domain.model.locations.LocationEntity? = null
+    var location: LocationEntity? = null
 )

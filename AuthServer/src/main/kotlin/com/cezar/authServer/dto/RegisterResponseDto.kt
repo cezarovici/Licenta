@@ -1,4 +1,7 @@
 package com.cezar.authServer.dto
 
-class RegisterResponseDto {
-}
+data class AuthUserResponseDTO(
+    val id: Long,
+    val email: String,
+    val username: String
+)

@@ -13,5 +13,5 @@ class ClientPhotoEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    var client: com.cezar.core.domain.model.client.ClientEntity? = null
+    var client: ClientEntity? = null
 )

@@ -62,7 +62,7 @@ class EventService(
             sport = event.sport,
             eventDateTime = event.eventDateTime,
             eventType = event.type,
-            creator = UserView(creator.id!!, creator.firstName, creator.lastName, creator.email),
+            creator = UserView(creator.id!!, creator.firstName, creator.lastName),
             location = LocationView(event.location.id!!, event.location.name, event.location.address),
             description = details.description,
             maxParticipants = details.maxParticipants,

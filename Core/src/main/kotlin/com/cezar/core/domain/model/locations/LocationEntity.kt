@@ -6,7 +6,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "locations", schema = "core")
+@Table(name = "locations")
 open class LocationEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +26,16 @@ open class LocationEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id", nullable = false)
-    var business: com.cezar.core.domain.model.business.BusinessEntity,
+    var business: BusinessEntity,
 
     @OneToMany(mappedBy = "location")
-    var events: MutableSet<com.cezar.core.domain.model.event.EventEntity> = mutableSetOf(),
+    var events: MutableSet<EventEntity> = mutableSetOf(),
 
     @OneToMany(mappedBy = "location", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<com.cezar.core.domain.model.locations.LocationPhotos> = mutableSetOf(),
+    var photos: MutableSet<LocationPhotos> = mutableSetOf(),
 
     @OneToMany(mappedBy = "location", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var operatingHours: MutableSet<com.cezar.core.domain.model.locations.OperatingHour> = mutableSetOf(),
+    var operatingHours: MutableSet<OperatingHour> = mutableSetOf(),
 
     @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
@@ -43,7 +43,7 @@ open class LocationEntity(
         joinColumns = [JoinColumn(name = "location_id")],
         inverseJoinColumns = [JoinColumn(name = "facility_id")]
     )
-    var facilities: MutableSet<com.cezar.core.domain.model.locations.Facility> = mutableSetOf(),
+    var facilities: MutableSet<Facility> = mutableSetOf(),
 
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -51,17 +51,17 @@ open class LocationEntity(
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
 ) {
-    fun addPhoto(photo: com.cezar.core.domain.model.locations.LocationPhotos) {
+    fun addPhoto(photo: LocationPhotos) {
         this.photos.add(photo)
         photo.location = this
     }
 
-    fun addOperatingHour(hour: com.cezar.core.domain.model.locations.OperatingHour) {
+    fun addOperatingHour(hour: OperatingHour) {
         this.operatingHours.add(hour)
         hour.location = this
     }
 
-    fun addFacility(facility: com.cezar.core.domain.model.locations.Facility) {
+    fun addFacility(facility: Facility) {
         this.facilities.add(facility)
     }
 }

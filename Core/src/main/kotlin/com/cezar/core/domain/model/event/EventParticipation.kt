@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(
-    name = "event_participations", schema = "core",
+    name = "event_participations",
     uniqueConstraints = [UniqueConstraint(columnNames = ["event_id", "client_id"])]
 )
 open class EventParticipation(
@@ -16,11 +16,11 @@ open class EventParticipation(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    var event: com.cezar.core.domain.model.event.EventEntity? = null,
+    var event: EventEntity? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    var client: com.cezar.core.domain.model.client.ClientEntity,
+    var client: ClientEntity,
 
     @Column(name = "join_date_time", nullable = false, updatable = false)
     val joinDateTime: LocalDateTime = LocalDateTime.now()
