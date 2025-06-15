@@ -25,15 +25,13 @@ export const getCurrentUserProfile = async (): Promise<ClientProfile> => {
   const token = localStorage.getItem("token");
   // Preluăm ID-ul contului pentru a construi URL-ul
 
-  console.log(token);
-
   if (!token) {
     throw new Error("User is not authenticated. No token found.");
   }
 
   // Construim URL-ul către noul endpoint din `core-functionality`,
   // care este expus prin API Gateway pe portul 8080.
-  const apiUrl = `http://localhost:8080/api/profiles/me`;
+  const apiUrl = `http://localhost:8080/api/client-profile/me`;
 
   const response = await fetch(apiUrl, {
     method: "GET",

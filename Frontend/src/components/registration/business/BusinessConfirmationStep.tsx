@@ -15,7 +15,7 @@ const DataRow: React.FC<{ label: string; value: string }> = ({
 );
 
 interface ConfirmationProps {
-  formData: any; // Primim toate datele
+  formData: any;
 }
 
 const BusinessConfirmationStep: React.FC<ConfirmationProps> = ({

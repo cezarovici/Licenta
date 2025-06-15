@@ -1,5 +1,6 @@
 package com.cezar.core.controller
 
+import com.cezar.core.service.BusinessRegistrationService
 import com.cezar.core.service.ClientRegistrationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,10 +19,22 @@ data class CompleteClientRegistrationRequest(
     val bio: String?
 )
 
+data class CompleteBusinessRegistrationRequest(
+    val firstName:String,
+    val lastName:String,
+    val email:String,
+    val password:String,
+    val businessName: String,
+    val businessDescription: String,
+    val locationName: String,
+    val locationAddress: String
+)
+
 @RestController
 @RequestMapping("/api/register")
 class RegistrationController(
-    private val clientRegistrationService: ClientRegistrationService
+    private val clientRegistrationService: ClientRegistrationService,
+    private val businessRegistrationService: BusinessRegistrationService
 ) {
     private val logger = LoggerFactory.getLogger(RegistrationController::class.java)
 
@@ -31,6 +44,15 @@ class RegistrationController(
         logger.info("Client data received: {}", request)
 
         clientRegistrationService.registerClient(request)
+        return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @PostMapping("/business")
+    fun registerBusiness(@RequestBody request: CompleteBusinessRegistrationRequest): ResponseEntity<Void>{
+        logger.info("Received business request for path: /api/register/business")
+        logger.info("Business data received: {}", request)
+
+        businessRegistrationService.registerBusiness(request)
         return ResponseEntity(HttpStatus.CREATED)
     }
 }

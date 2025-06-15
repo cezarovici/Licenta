@@ -63,7 +63,6 @@ class GatewayTrustFilter(
         }
 
         filterChain.doFilter(request, response)
-        // NU face clearContext aici!
     }
 
 }

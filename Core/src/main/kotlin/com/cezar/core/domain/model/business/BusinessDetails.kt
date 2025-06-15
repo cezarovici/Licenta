@@ -13,7 +13,9 @@ open class BusinessDetails(
     @JoinColumn(name = "business_id")
     var business: BusinessEntity? = null,
 
-    @Lob
+    @Column(unique = true)
+    var cui: String? = null,
+
     @Column(nullable = true)
     var description: String? = null,
 
@@ -24,5 +26,5 @@ open class BusinessDetails(
     var phoneNumber: String? = null,
 
     @Column(nullable = true, name = "email")
-    var email: String? = null
+    var email: String? = null,
 )

@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import AccountTypeSelector from "./AccountTypeSelector";
-import ClientRegistrationForm from "./ClientRegistrationForm";
 
-import BusinessCoreDetailsForm from "./BusinessCoreDetailsForm";
-import LocationForm from "./LocationForm";
-import BusinessConfirmationStep from "./BusinessConfirmationStep";
+import ProfileDetailsForm from "./client/ProfileDetailsForm";
+import ConfirmationStep from "./client/ConfirmationStep";
+import ClientRegistrationForm from "./client/ClientRegistrationForm";
 
-import ProfileDetailsForm from "./ProfileDetailsForm";
-import ConfirmationStep from "./ConfirmationStep";
+import BusinessCoreDetailsForm from "./business/BusinessCoreDetailsForm";
+import BusinessConfirmationStep from "./business/BusinessConfirmationStep";
+import LocationForm from "./business/LocationForm";
+
 import { registerClientAccount } from "../../lib/register/register_client";
+import { registerBusinessAccount } from "../../lib/register/register_business";
 
 const initialFormData = {
   firstName: "",
   lastName: "",
   email: "",
   password: "",
-  profilePhotoUrl: "",
+  photoUrl: "",
   bio: "",
   businessName: "",
   businessDescription: "",
@@ -51,19 +53,28 @@ export default function RegistrationWizard() {
       setError(null);
 
       try {
-        // Aici este cheia: trimitem întregul obiect formData care conține tot.
-        // Ne asigurăm că `registerClientAccount` așteaptă acest tip de obiect.
         const result = await registerClientAccount(formData);
 
         console.log("Account created successfully:", result);
-        handleNext(); // Trecem la pasul de succes
+        handleNext();
       } catch (err: any) {
         setError(err.message || "Something went wrong.");
       } finally {
         setIsLoading(false);
       }
-    } else {
-      handleNext();
+    } else if (accountType === "BUSINESS" && step === 4) {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await registerBusinessAccount(formData);
+
+        console.log("Business account data:", result);
+        handleNext();
+      } catch (err: any) {
+        setError(err.message || "Something went wrong.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
   const handleSelectType = (type: "CLIENT" | "BUSINESS") => {
@@ -82,7 +93,6 @@ export default function RegistrationWizard() {
     const isLastBusinessStep = accountType === "BUSINESS" && step === 4;
 
     if (isLastClientStep || isLastBusinessStep) {
-      // La ultimul pas, afișăm doar butonul de submit final și un back
       return (
         <div className="mt-8">
           <button
@@ -102,7 +112,6 @@ export default function RegistrationWizard() {
       );
     }
 
-    // Pentru pașii intermediari
     return (
       <div className="flex items-center justify-between mt-8">
         <button
@@ -115,7 +124,8 @@ export default function RegistrationWizard() {
         </button>
 
         <button
-          type="submit" // Folosim submit pentru a declanșa handleFormSubmit, care va face handleNext()
+          type="submit"
+          onClick={handleNext}
           className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-orange-500 transition-colors"
         >
           Next Step &rarr;

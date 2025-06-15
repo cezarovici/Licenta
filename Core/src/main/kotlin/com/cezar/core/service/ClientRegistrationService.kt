@@ -7,6 +7,8 @@ import com.cezar.core.controller.CompleteClientRegistrationRequest
 import com.cezar.core.domain.model.client.ClientDetails
 import com.cezar.core.domain.model.client.ClientEntity
 import com.cezar.core.repository.ClientRepository
+import com.cezar.core.repository.UserTypeRepository // <-- NOU: Importă UserTypeRepository
+import com.cezar.core.domain.model.UserTypeEntity // <-- NOU: Importă UserTypeEntity (asigură-te că pachetul este corect)
 import feign.FeignException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -18,7 +20,8 @@ import java.nio.charset.StandardCharsets
 @Service
 class ClientRegistrationService(
     private val authServerClient: AuthServerClient,
-    private val clientRepository: ClientRepository
+    private val clientRepository: ClientRepository,
+    private val userTypeRepository: UserTypeRepository
 ) {
     private val logger = LoggerFactory.getLogger(ClientRegistrationService::class.java)
 
@@ -28,6 +31,7 @@ class ClientRegistrationService(
      * Pasul 2: Salvează profilul local. Dacă acest pas eșuează, se inițiază compensarea.
      */
     fun registerClient(request: CompleteClientRegistrationRequest) {
+        logger.info("Starting client registration process for email: ${request.email}")
         // Pasul 1: Creează utilizatorul în serviciul de autentificare.
         // Această funcție va arunca o excepție `ResponseStatusException` dacă eșuează, oprind fluxul.
         val createdAuthUser = createUserInAuthService(request)
@@ -50,10 +54,12 @@ class ClientRegistrationService(
                 email = request.email,
                 username = request.email,
                 password = request.password,
-                authorities = setOf("ROLE_CLIENT")
+                authorities = setOf("CLIENT") // Setează rolul corespunzător în AuthServer
             )
-            return authServerClient.createUser(createAuthUserRequest)
-        } catch (e: FeignException.BadRequest) { // Prindem specific eroarea 400
+            val authUser = authServerClient.createUser(createAuthUserRequest)
+            logger.info("Step 1 SUCCESS: User created in AuthServer with ID: ${authUser.id}")
+            return authUser
+        } catch (e: FeignException.BadRequest) {
             val errorMessage = e.responseBody()
                 .map { buffer -> StandardCharsets.UTF_8.decode(buffer).toString() }
                 .orElse("A user with the given details already exists.")
@@ -71,10 +77,10 @@ class ClientRegistrationService(
      */
     private fun saveClientProfileWithCompensation(createdAuthUser: AuthUserDTO, request: CompleteClientRegistrationRequest) {
         try {
-            logger.info("Step 2: Attempting to create local profile for authUserId: ${createdAuthUser.id}")
+            logger.info("Step 2: Attempting to create local profile and user type for authUserId: ${createdAuthUser.id}")
             saveLocalClientProfile(createdAuthUser.id, request)
         } catch (e: Exception) {
-            logger.error("Step 2 FAILED: Could not save client profile locally for authId ${createdAuthUser.id}. Starting compensation.", e)
+            logger.error("Step 2 FAILED: Could not save client profile or user type locally for authId ${createdAuthUser.id}. Starting compensation.", e)
             compensateAuthUserCreation(createdAuthUser.id)
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User registration failed due to a profile creation error. Changes were rolled back.", e)
         }
@@ -91,12 +97,14 @@ class ClientRegistrationService(
         } catch (e: Exception) {
             // Această eroare este critică. Trebuie logată cu prioritate maximă.
             // Utilizatorul a fost creat în AuthServer, dar nu și local, și compensarea a eșuat.
-            logger.error("CRITICAL FAILURE: Compensation transaction failed for authId $authUserId. Orphan user may exist.", e)
+            logger.error("CRITICAL FAILURE: Compensation transaction failed for authId $authUserId. Orphan user may exist in AuthServer.", e)
+            // Aici ar trebui să notifici un sistem de alertare pentru intervenție manuală.
         }
     }
 
     @Transactional
     internal fun saveLocalClientProfile(authUserId: Long, request: CompleteClientRegistrationRequest) {
+        logger.info("Sub-step 2.1: Saving ClientEntity for authId $authUserId")
         val clientEntity = ClientEntity(
             accountId = authUserId,
             firstName = request.firstName,
@@ -106,5 +114,17 @@ class ClientRegistrationService(
         val clientDetails = ClientDetails(bio = request.bio)
         clientEntity.addDetails(clientDetails)
         clientRepository.save(clientEntity)
+        logger.info("Sub-step 2.1 SUCCESS: ClientEntity saved for authId $authUserId")
+
+        // <-- NOU: Salvarea tipului de utilizator în tabela user_types
+        logger.info("Sub-step 2.2: Saving UserTypeEntity 'CLIENT' for authId $authUserId")
+        val userTypeEntry = UserTypeEntity(
+            accountId = authUserId,
+            userType = "CLIENT" // <-- Valoare constantă pentru clienți
+        )
+        userTypeRepository.save(userTypeEntry)
+        logger.info("Sub-step 2.2 SUCCESS: UserTypeEntity 'CLIENT' saved for authId $authUserId")
+
+        logger.info("Step 2 COMPLETE: Successfully saved local client profile and user type for authId $authUserId")
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/profiles")
+@RequestMapping("/api/client-profile")
 class ClientProfileController(
     private val clientProfileService: ClientProfileService
 ) {

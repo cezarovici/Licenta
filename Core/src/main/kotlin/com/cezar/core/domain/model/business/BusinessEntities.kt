@@ -1,6 +1,8 @@
 package com.cezar.core.domain.model.business
 
+import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.Cascade
 import java.time.LocalDateTime
 @Entity
 @Table(name = "business")
@@ -13,7 +15,7 @@ open class BusinessEntity(
     val accountId: Long,
 
     @Column(nullable = false)
-    var name: String,
+    var businessName: String,
 
     @Column(nullable = true, name = "logo_url")
     var logoUrl: String? = null,
@@ -28,7 +30,10 @@ open class BusinessEntity(
     var details: BusinessDetails? = null,
 
     @OneToMany(mappedBy = "business", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<BusinessPhotoEntity> = mutableSetOf()
+    var photos: MutableSet<BusinessPhotoEntity> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "business", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var locations: MutableSet<LocationEntity> = mutableSetOf(),
 ) {
     fun addDetails(details: BusinessDetails) {
         this.details = details
@@ -38,6 +43,10 @@ open class BusinessEntity(
     fun addPhoto(photo: BusinessPhotoEntity) {
         photos.add(photo)
         photo.business = this
+    }
+
+    fun addLocation(location: LocationEntity) {
+        locations.add(location)
     }
 
     fun removePhoto(photo: BusinessPhotoEntity) {

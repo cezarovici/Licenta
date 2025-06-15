@@ -1,11 +1,9 @@
-// src/components/registration/ProfileDetailsForm.tsx
-
 import React from "react";
-import InputField from "../ui/InputField";
+import InputField from "../../ui/InputField";
 
 interface ProfileDetailsProps {
   formData: {
-    profilePhotoUrl: string;
+    photoUrl: string;
     bio: string;
   };
   handleChange: (
@@ -22,7 +20,7 @@ const ProfileDetailsForm: React.FC<ProfileDetailsProps> = ({
       id="profilePhotoUrl"
       label="Profile Photo URL"
       type="text"
-      value={formData.profilePhotoUrl}
+      value={formData.photoUrl}
       onChange={handleChange}
       placeholder="https://example.com/photo.jpg"
     />

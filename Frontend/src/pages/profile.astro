@@ -1,7 +1,8 @@
 ---
-import UserProfile from "../components/user/UserProfile.astro";
+import ProfileManager from "../components/profile/ProfileManager";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Profile" />
-<UserProfile />
+<Layout title="Profile">
+  <ProfileManager client:load />
+</Layout>

@@ -1,5 +1,3 @@
-// src/components/registration/ConfirmationStep.tsx
-
 import React from "react";
 
 interface ConfirmationProps {
@@ -7,7 +5,7 @@ interface ConfirmationProps {
     firstName: string;
     lastName: string;
     email: string;
-    profilePhotoUrl: string;
+    photoUrl: string;
     bio: string;
   };
 }
@@ -31,7 +29,7 @@ const ConfirmationStep: React.FC<ConfirmationProps> = ({ formData }) => (
       <DataRow label="First Name" value={formData.firstName} />
       <DataRow label="Last Name" value={formData.lastName} />
       <DataRow label="Email" value={formData.email} />
-      <DataRow label="Profile Photo URL" value={formData.profilePhotoUrl} />
+      <DataRow label="Profile Photo URL" value={formData.photoUrl} />
       <DataRow label="Bio" value={formData.bio} />
     </dl>
     <p className="text-xs text-slate-500 text-center pt-2">

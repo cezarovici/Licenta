@@ -24,6 +24,6 @@ interface AuthServerClient {
     @PostMapping("/auth/signup")
     fun createUser(@RequestBody request: CreateAuthUserRequest): AuthUserDTO
 
-    @DeleteMapping("/auth/signup{id}")
+    @DeleteMapping("/auth/user/{id}")
     fun deleteUser(@PathVariable("id") id: Long)
 }

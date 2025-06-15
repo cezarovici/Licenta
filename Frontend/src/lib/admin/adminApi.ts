@@ -1,4 +1,4 @@
-import type { User } from "../userApi";
+import type { User } from "../profile/clientProfile";
 
 export async function listUsers(): Promise<User[]> {
   if (typeof window === "undefined") {

@@ -1,6 +1,5 @@
 import React from "react";
-import InputField from "../ui/InputField";
-
+import InputField from "../../ui/InputField";
 interface RegistrationFormProps {
   formData: any;
   handleChange: (

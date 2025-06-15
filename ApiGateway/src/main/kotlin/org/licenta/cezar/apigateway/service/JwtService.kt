@@ -15,7 +15,7 @@ class JwtService {
     private val logger = LoggerFactory.getLogger(JwtService::class.java)
 
     @Value("\${app.gateway.shared-secret}")
-    private lateinit var secretKey: String // This is likely your JWT signing key now, as discussed
+    private lateinit var secretKey: String
 
     fun extractUsername(token: String): String {
         logger.debug("Attempting to extract username from token: {}", token.take(20) + "...")

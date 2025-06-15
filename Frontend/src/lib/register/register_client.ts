@@ -3,13 +3,10 @@ type CompleteClientPayload = {
   lastName: string;
   email: string;
   password: string;
-  profilePhotoUrl: string;
+  photoUrl: string;
   bio: string;
 };
 
-/**
- * Funcție care înregistrează un cont complet de CLIENT.
- */
 export async function registerClientAccount(payload: CompleteClientPayload) {
   const response = await fetch("http://localhost:8080/api/register/client", {
     method: "POST",
@@ -26,5 +23,6 @@ export async function registerClientAccount(payload: CompleteClientPayload) {
     );
   }
 
+  localStorage.setItem("userType", "client");
   return response.json();
 }

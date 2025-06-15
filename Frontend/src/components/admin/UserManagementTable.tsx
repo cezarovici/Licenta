@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { listUsers } from "../../lib/admin/adminApi";
-import type { User } from "../../lib/userApi";
+import type { User } from "../../lib/profile/clientProfile";
 
 export default function UserManagementTable() {
   const [users, setUsers] = useState<User[]>([]);

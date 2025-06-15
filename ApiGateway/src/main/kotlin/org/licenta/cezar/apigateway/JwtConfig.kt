@@ -50,7 +50,7 @@ class AuthenticationFilter(
         val token = authHeader.substringAfter("Bearer ")
         logger.debug("Extracted JWT (first/last 5 chars): ${token.take(5)}...${token.takeLast(5)}")
 
-        try {
+        try {   
             if (!jwtService.isTokenValid(token)) {
                 logger.warn("🔴 [Invalid Token] Validation failed for $path")
                 return respondWith(exchange, HttpStatus.UNAUTHORIZED, "JWT Token is invalid or expired")
@@ -87,8 +87,13 @@ class AuthenticationFilter(
     }
 
     private fun isPublicEndpoint(path: String): Boolean {
-        val isPublic = path.startsWith("/api/register/client") || path.startsWith("/idm/auth/login")
-        logger.debug("Public endpoint check for $path: $isPublic")
+        val publicEndpoints = setOf(
+            "/api/register/client",
+            "/api/register/business",
+            "/idm/auth/login"
+        )
+        val isPublic = publicEndpoints.any { path.startsWith(it) }
+        logger.debug("Verificare endpoint public pentru $path: $isPublic")
         return isPublic
     }
 
@@ -102,10 +107,10 @@ class AuthenticationFilter(
         if (requiresAdmin && !roles.contains("ROLE_ADMIN")) {
             hasAccess = false
         }
-        if (requiresUser && !roles.contains("ROLE_USER") && !roles.contains("ROLE_ADMIN")) { // Admin are acces și la user
+        if (requiresUser && !roles.contains("ROLE_USER") && !roles.contains("ROLE_ADMIN")) {
             hasAccess = false
         }
-        if (requiresManager && !roles.contains("ROLE_MANAGER") && !roles.contains("ROLE_ADMIN")) { // Admin are acces și la manager
+        if (requiresManager && !roles.contains("ROLE_MANAGER") && !roles.contains("ROLE_ADMIN")) {
             hasAccess = false
         }
 

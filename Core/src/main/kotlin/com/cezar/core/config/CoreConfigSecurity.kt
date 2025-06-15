@@ -22,6 +22,8 @@ class CoreSecurityConfig(
             csrf { it.disable() }
             .authorizeHttpRequests {
                     it.requestMatchers("/api/register/client").permitAll()
+                    it.requestMatchers("/api/register/business").permitAll()
+                    it.requestMatchers("/api/user-type/me").authenticated()
                         .anyRequest().authenticated()
             }
             .sessionManagement {
