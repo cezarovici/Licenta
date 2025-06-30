@@ -3,13 +3,13 @@ package com.cezar.core.config
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
@@ -18,16 +18,29 @@ class GatewayTrustFilter(
     private val configProperties: GatewaySecurityConfigProperties
 
 ) : OncePerRequestFilter() {
-    private val logger = LoggerFactory.getLogger(GatewayTrustFilter::class.java)
+    private val pathMatcher = AntPathMatcher()
 
     companion object {
         private const val SECRET_HEADER_NAME = "X-Internal-Secret"
-    }
 
+        private val ADDITIONAL_IGNORED_PATHS = listOf(
+            "/api/docs",
+            "/api/docs/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+        )
+    }
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return configProperties.excludedPaths.any { excludedPath ->
-            request.requestURI.startsWith(excludedPath)
+        val configuredExclusion = configProperties.excludedPaths.any { excludedPath ->
+            pathMatcher.match(excludedPath, request.requestURI)
         }
+
+        val isSwaggerOrDocs = ADDITIONAL_IGNORED_PATHS.any { ignoredPath ->
+            pathMatcher.match(ignoredPath, request.requestURI)
+        }
+
+        return configuredExclusion || isSwaggerOrDocs
     }
 
     override fun doFilterInternal(
@@ -64,5 +77,4 @@ class GatewayTrustFilter(
 
         filterChain.doFilter(request, response)
     }
-
 }

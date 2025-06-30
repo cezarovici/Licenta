@@ -1,12 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  content: [
+    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
+    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+  ],
 
-  darkMode: "class",
+  darkMode: "media",
 
   theme: {
     extend: {},
   },
 
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 };

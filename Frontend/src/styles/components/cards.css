@@ -1,0 +1,27 @@
+.card {
+  background-color: var(--color-bg-section);
+  padding: var(--spacing-lg);
+  border-radius: 1rem; /* rounded-xl */
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.card-number {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+  font-size: 3rem; /* text-5xl */
+  margin-bottom: var(--spacing-sm);
+}
+
+.card-title {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-heading);
+}
+
+.card-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,67 @@
+:root {
+  /* Text */
+  --color-text-primary: #0f172a; /* slate-900 */
+  --color-text-secondary: #475569; /* slate-600 */
+  --color-heading: #1e293b; /* slate-800 */
+
+  /* Backgrounds */
+  --color-bg: #ffffff; /* white */
+  --color-bg-section: #f8fafc; /* slate-50 */
+  --color-bg-grid: #ffffff;
+  --color-bg-input: #ffffff;
+  --color-bg-alert-success: #dcfce7; /* green-100 */
+  --color-bg-alert-error: #fee2e2; /* red-100 */
+
+  /* Borders & Grid */
+  --color-border: #cbd5e1; /* slate-300 */
+  --color-grid-lines: #4f4f4f1a;
+
+  /* Accent */
+  --color-accent: #f97316; /* orange-500 */
+  --color-accent-hover: #ea580c; /* orange-600 */
+
+  /* Form extras */
+  --color-input-text: #0f172a;
+  --color-input-border: #cbd5e1;
+  --color-input-shadow: rgba(0, 0, 0, 0.05);
+  --color-focus-ring: #6366f1; /* indigo-500 */
+
+  /* Alerts */
+  --color-success-text: #15803d; /* green-700 */
+  --color-error-text: #b91c1c; /* red-700 */
+
+  /* Buttons */
+  --color-btn-primary: #6366f1; /* indigo-500 */
+  --color-btn-primary-hover: #4f46e5; /* indigo-600 */
+  --color-btn-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #f1f5f9; /* slate-100 */
+    --color-text-secondary: #cbd5e1; /* slate-300 */
+    --color-heading: #e2e8f0; /* slate-200 */
+
+    --color-bg: #0f172a; /* slate-900 */
+    --color-bg-section: #1e293b; /* slate-800 */
+    --color-bg-grid: #0f172a;
+    --color-bg-input: #1e293b;
+    --color-bg-alert-success: #14532d; /* green-900 */
+    --color-bg-alert-error: #7f1d1d; /* red-900 */
+
+    --color-border: #475569; /* slate-600 */
+    --color-grid-lines: #ffffff14;
+
+    --color-input-text: #f1f5f9;
+    --color-input-border: #64748b;
+    --color-input-shadow: rgba(255, 255, 255, 0.05);
+    --color-focus-ring: #818cf8; /* indigo-400 */
+
+    --color-success-text: #86efac; /* green-300 */
+    --color-error-text: #fca5a5; /* red-300 */
+
+    --color-btn-primary: #4f46e5;
+    --color-btn-primary-hover: #4338ca;
+    --color-btn-text: #ffffff;
+  }
+}

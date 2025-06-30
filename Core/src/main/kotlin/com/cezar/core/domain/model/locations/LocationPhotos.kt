@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.locations
 
+import com.cezar.core.application.dto.business.LocationPhotoDTO
 import jakarta.persistence.*
 
 @Entity
@@ -18,4 +19,10 @@ open class LocationPhotos(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     var location: LocationEntity? = null
-)
+){
+    fun toDTO(): LocationPhotoDTO = LocationPhotoDTO(
+        id = this.id,
+        url = this.photoUrl,
+        description = this.caption
+    )
+}

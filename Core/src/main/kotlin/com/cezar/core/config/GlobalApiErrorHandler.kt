@@ -1,4 +1,4 @@
-package com.cezar.core.config // Sau într-un pachet dedicat de excepții
+package com.cezar.core.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity

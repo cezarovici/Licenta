@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.event
 
+import com.cezar.core.application.dto.EventPhotoDTO
 import jakarta.persistence.*
 
 @Entity
@@ -18,4 +19,12 @@ open class EventPhotos(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     var event: EventEntity? = null
-)
+){
+    fun toDTO(): EventPhotoDTO {
+        return EventPhotoDTO(
+            id = this.id,
+            photoUrl = this.photoUrl,
+            caption = this.caption
+        )
+    }
+}

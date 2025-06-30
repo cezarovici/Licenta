@@ -95,16 +95,13 @@ export default function RegistrationWizard() {
     if (isLastClientStep || isLastBusinessStep) {
       return (
         <div className="mt-8">
-          <button
-            type="submit"
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-orange-500 transition-colors"
-          >
+          <button type="submit" className="btn-primary btn-block">
             Confirm & Create Account
           </button>
           <button
             type="button"
             onClick={handleBack}
-            className="w-full text-center mt-4 text-sm text-slate-400 hover:text-white"
+            className="btn-link-secondary mt-4"
           >
             Back to edit
           </button>
@@ -117,17 +114,13 @@ export default function RegistrationWizard() {
         <button
           type="button"
           onClick={handleBack}
-          className="text-sm text-orange-400 hover:text-orange-300 disabled:opacity-50"
+          className="btn-link text-sm"
           disabled={step <= 1}
         >
           &larr; Back
         </button>
 
-        <button
-          type="submit"
-          onClick={handleNext}
-          className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-orange-500 transition-colors"
-        >
+        <button type="submit" onClick={handleNext} className="btn-primary">
           Next Step &rarr;
         </button>
       </div>
@@ -135,7 +128,7 @@ export default function RegistrationWizard() {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-8 text-white animate-fade-in">
+    <div className="w-full max-w-lg mx-auto p-8 text-primary animate-fade-in">
       {step === 0 && <AccountTypeSelector onSelectType={handleSelectType} />}
 
       {step > 0 && (
@@ -143,20 +136,23 @@ export default function RegistrationWizard() {
           <div className="text-center mb-8">
             <button
               onClick={goBackToSelection}
-              className="text-sm text-orange-400 hover:text-orange-300 mb-4"
+              className="btn-link text-sm mb-4"
             >
               &larr; Start Over
             </button>
             <h2 className="text-3xl font-bold">
-              Create Your <span className="text-orange-500">{accountType}</span>{" "}
+              Create Your{" "}
+              <span style={{ color: "var(--color-accent)" }}>
+                {accountType}
+              </span>{" "}
               Account
               {accountType === "CLIENT" && (
-                <span className="text-lg text-slate-400 ml-2">
+                <span className="text-lg text-secondary ml-2">
                   (Step {step}/3)
                 </span>
               )}
               {accountType === "BUSINESS" && (
-                <span className="text-lg text-slate-400 ml-2">
+                <span className="text-lg text-secondary ml-2">
                   (Step {step}/4)
                 </span>
               )}
@@ -208,11 +204,13 @@ export default function RegistrationWizard() {
                 </>
               )}
             </div>
+
             {error && (
-              <div className="mt-4 p-3 bg-red-900/50 border border-red-500 rounded-md text-sm text-red-300">
+              <div className="alert-error mt-4">
                 <strong>Error:</strong> {error}
               </div>
             )}
+
             {renderNavigationButtons()}
           </form>
         </div>

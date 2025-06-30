@@ -1,6 +1,7 @@
 package com.cezar.core.domain.model.client
 
 
+import com.cezar.core.application.dto.ClientDTO
 import jakarta.persistence.*
 
 @Entity
@@ -16,6 +17,9 @@ class ClientEntity(
     var profilePhotoUrl: String,
 
     @Column(nullable = false)
+    var username: String,
+
+    @Column(nullable = false)
     var firstName: String,
 
     @Column(nullable = false)
@@ -28,7 +32,7 @@ class ClientEntity(
     var participations: MutableSet<com.cezar.core.domain.model.event.EventParticipation> = mutableSetOf(),
 
     @OneToMany(mappedBy = "client", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var photos: MutableSet<com.cezar.core.domain.model.client.ClientPhotoEntity> = mutableSetOf(),
+    var photos: MutableSet<ClientPhotoEntity> = mutableSetOf(),
 
     @OneToOne(mappedBy = "client", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, optional = false)
     var details: ClientDetails? = null,
@@ -37,6 +41,13 @@ class ClientEntity(
     fun addDetails(details: ClientDetails) {
         this.details = details
         details.client = this
+    }
+
+    fun toDTO(): ClientDTO{
+        return ClientDTO(
+            id = this.id,
+            username = this.username,
+        )
     }
 
 }

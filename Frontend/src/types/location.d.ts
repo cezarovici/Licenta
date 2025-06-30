@@ -1,21 +1,8 @@
-// Corespunde LocationResponse din backend
 export interface Location {
-  id: number; // Folosim number pentru Long-ul din Kotlin
+  id: number;
   name: string;
   address: string;
-  latitude: number | null;
-  longitude: number | null;
-  businessId: number;
-  // Aici vei adăuga și alte câmpuri când vei implementa
-  // photoUrls?: string[];
-  // operatingHours?: OperatingHour[];
-  // facilities?: Facility[];
-}
-
-// Corespunde LocationCreateRequest din backend
-export interface LocationCreatePayload {
-  name: string;
-  address: string;
-  latitude?: number;
-  longitude?: number;
+  // Poți folosi un obiect mai complex pentru program dacă ai nevoie
+  openingHours: string; // ex: "L-V: 09:00-22:00, S-D: 10:00-20:00"
+  photoUrl: string | null;
 }

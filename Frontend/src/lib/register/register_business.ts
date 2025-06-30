@@ -27,5 +27,6 @@ export async function registerBusinessAccount(
   }
 
   localStorage.setItem("userType", "business");
+
   return response.json();
 }

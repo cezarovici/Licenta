@@ -1,8 +1,11 @@
 package com.cezar.core.domain.model.business
 
+import com.cezar.core.application.dto.business.BusinessDetailDTO
+import com.cezar.core.application.dto.business.BusinessLocationsDTO
+import com.cezar.core.application.dto.business.BusinessSummaryDTO
+import com.cezar.core.application.service.location.toSummaryDTO
 import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
-import org.hibernate.annotations.Cascade
 import java.time.LocalDateTime
 @Entity
 @Table(name = "business")
@@ -35,6 +38,31 @@ open class BusinessEntity(
     @OneToMany(mappedBy = "business", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var locations: MutableSet<LocationEntity> = mutableSetOf(),
 ) {
+    fun toSummaryDTO(): BusinessSummaryDTO {
+        return BusinessSummaryDTO(
+            businessName = this.businessName,
+            logoUrl = this.logoUrl
+        )
+    }
+
+    fun toDetailDTO(): BusinessDetailDTO {
+        return BusinessDetailDTO(
+            businessName = this.businessName,
+            logoUrl = this.logoUrl,
+            details = this.details!!.toDTO(),
+            photos = this.photos.map { it.toDTO() }.toSet(),
+            locations = this.locations.map { it.toSummaryDTO() }.toSet()
+        )
+    }
+
+    fun toLocationsDTO(): BusinessLocationsDTO {
+        return BusinessLocationsDTO(
+            businessName = this.businessName,
+            website = this.details?.websiteUrl,
+            locations = this.locations.map { it.toSummaryDTO() }.toSet()
+        )
+    }
+
     fun addDetails(details: BusinessDetails) {
         this.details = details
         details.business = this

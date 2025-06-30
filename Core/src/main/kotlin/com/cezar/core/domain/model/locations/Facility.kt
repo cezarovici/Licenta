@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.locations
 
+import com.cezar.core.application.dto.business.FacilityDTO
 import jakarta.persistence.*
 
 @Entity
@@ -13,5 +14,14 @@ open class Facility(
     var name: String,
 
     @Column
-    var iconUrl: String? = null
-)
+    var iconUrl: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    var location: LocationEntity? = null
+){
+    fun toDTO(): FacilityDTO = FacilityDTO(
+        id = this.id,
+        name = this.name
+    )
+}

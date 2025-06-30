@@ -31,7 +31,6 @@ class AuthenticationFilter(
 
         logger.debug("Request Headers: {}", request.headers)
 
-        // Public endpoints check
         if (isPublicEndpoint(path)) {
             logger.info("🟢 [Public Access] Bypassing auth for $path")
 
@@ -70,7 +69,7 @@ class AuthenticationFilter(
             val modifiedRequest = request.mutate().apply {
                 header(X_USER_ID_HEADER, accountId.toString())
                 header(X_USER_ROLES_HEADER, roles.joinToString(","))
-                header(X_INTERNAL_SECRET_HEADER, sharedSecret) // <-- ADAUGĂ ACEASTĂ LINIE!
+                header(X_INTERNAL_SECRET_HEADER, sharedSecret)
                 logger.debug("Added headers: $X_USER_ID_HEADER, $X_USER_ROLES_HEADER, $X_INTERNAL_SECRET_HEADER")
             }.build()
 
@@ -90,6 +89,7 @@ class AuthenticationFilter(
         val publicEndpoints = setOf(
             "/api/register/client",
             "/api/register/business",
+            "/v3/api-docs",
             "/idm/auth/login"
         )
         val isPublic = publicEndpoints.any { path.startsWith(it) }
@@ -128,14 +128,8 @@ class AuthenticationFilter(
     private fun respondWith(exchange: ServerWebExchange, status: HttpStatus, message: String): Mono<Void> {
         logger.info("⚡ [Response] Status $status - $message")
         exchange.response.statusCode = status
-        // Poți adăuga un corp de răspuns pentru a da mai multe detalii clientului
-        // exchange.response.headers.add(HttpHeaders.CONTENT_TYPE, "application/json")
-        // val dataBufferFactory = exchange.response.bufferFactory()
-        // val jsonBody = "{\"status\": ${status.value()}, \"message\": \"$message\"}"
-        // val buffer = dataBufferFactory.wrap(jsonBody.toByteArray(Charsets.UTF_8))
-        // return exchange.response.writeWith(Mono.just(buffer)).then()
         return exchange.response.setComplete()
     }
 
-    override fun getOrder(): Int = -1 // Asigură-te că acest filtru se execută devreme în lanț
+    override fun getOrder(): Int = -1
 }

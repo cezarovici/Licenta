@@ -1,5 +1,3 @@
-// src/components/registration/BusinessConfirmationStep.tsx
-
 import React from "react";
 
 const DataRow: React.FC<{ label: string; value: string }> = ({

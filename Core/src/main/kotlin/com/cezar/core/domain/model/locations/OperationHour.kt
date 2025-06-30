@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.locations
 
+import com.cezar.core.application.dto.business.OperatingHourDTO
 import jakarta.persistence.*
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -24,4 +25,11 @@ open class OperatingHour(
 
     @Column(name = "close_time", nullable = false)
     var closeTime: LocalTime // ex: 23:00
-)
+){
+    fun toDTO(): OperatingHourDTO = OperatingHourDTO(
+        id = this.id,
+        dayOfWeek = this.dayOfWeek.name,
+        openTime = this.openTime,
+        closeTime = this.closeTime
+    )
+}

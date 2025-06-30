@@ -3,8 +3,8 @@ services:
     build:
       context: ./ServiceDiscoveryServer
       dockerfile: ./Dockerfile
-    ports:
-      - 8761:8761
+    ports: 
+      - "8761:8761"
     networks:
       - app-network
 
@@ -13,23 +13,27 @@ services:
       context: ./ApiGateway
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - "8080:8080" 
     depends_on:
       - service-discovery-server
+      - redis
     networks:
       - app-network
+    environment:
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
 
   core-functionality:
     build:
       context: ./Core
       dockerfile: ./Dockerfile
-    ports:
-      - 8083:8083
+    deploy:
+      replicas: 3 
     depends_on:
       - service-discovery-server
+      - core-functionality-db
     networks:
       - app-network
-    
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://core-functionality-db:5432/coredatabase
       SPRING_DATASOURCE_USERNAME: coreuser
@@ -40,26 +44,12 @@ services:
     image: postgres
     restart: always
     container_name: core-functionality-db
-
     environment:
       POSTGRES_USER: coreuser
       POSTGRES_PASSWORD: corepassword
       POSTGRES_DB: coredatabase
-
     ports:
-      - 5433:5432
-
-    networks:
-      - app-network
-
-
-
-  frontend:
-    build:
-      context: .
-      dockerfile: ./Frontend/Dockerfile
-    ports:
-      - 4321:4321
+      - "5433:5432"
     networks:
       - app-network
 
@@ -67,43 +57,74 @@ services:
     build:
       context: ./AuthServer
       dockerfile: ./Dockerfile
-    ports:
-      - 8081:8081
+    deploy:
+      replicas: 3
     depends_on:
       - service-discovery-server
       - auth-server-db
     networks:
       - app-network
-
     volumes:
       - db-data:/etc/data
-
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://auth-server-db:5432/authdatabase
       SPRING_DATASOURCE_USERNAME: authuser
       SPRING_DATASOURCE_PASSWORD: authpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
   auth-server-db:
     image: postgres
     restart: always
     container_name: auth-server-db
-
     environment:
       POSTGRES_USER: authuser
       POSTGRES_PASSWORD: authpassword
       POSTGRES_DB: authdatabase
-
     ports:
-      - 5432:5432
-
+      - "5432:5432"
     networks:
       - app-network
 
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Frontend/Dockerfile
+    ports:
+      - "4321:4321"
+    networks:
+      - app-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./load-tests:/scripts
+    working_dir: /scripts
+    entrypoint: ["k6", "run", "login-test.js"]
+    networks:
+      - app-network
 
 volumes:
   db-data:
-
 
 networks:
   app-network:

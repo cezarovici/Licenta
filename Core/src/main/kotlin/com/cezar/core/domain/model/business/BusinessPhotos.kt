@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.business
 
+import com.cezar.core.application.dto.business.BusinessPhotoDTO
 import jakarta.persistence.*
 
 @Entity
@@ -19,3 +20,13 @@ open class BusinessPhotoEntity(
     @JoinColumn(name = "business_id", nullable = false)
     var business: BusinessEntity? = null
 )
+{
+    fun toDTO(isPrimary: Boolean = false): BusinessPhotoDTO {
+        return BusinessPhotoDTO(
+            id = this.id!!,
+            photoUrl = this.photoUrl,
+            description = this.caption,
+            isPrimary = isPrimary
+        )
+    }
+}

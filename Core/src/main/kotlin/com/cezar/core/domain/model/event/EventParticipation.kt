@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.event
 
+import com.cezar.core.application.dto.EventParticipationDTO
 import com.cezar.core.domain.model.client.ClientEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -24,4 +25,11 @@ open class EventParticipation(
 
     @Column(name = "join_date_time", nullable = false, updatable = false)
     val joinDateTime: LocalDateTime = LocalDateTime.now()
-)
+){
+    fun toDTO(): EventParticipationDTO {
+        return EventParticipationDTO(
+            client = this.client.toDTO(),
+            joinDateTime = this.joinDateTime
+        )
+    }
+}

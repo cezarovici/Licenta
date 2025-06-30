@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.event
 
+import com.cezar.core.application.dto.EventDetailsDTO
 import jakarta.persistence.*
 import java.math.BigDecimal
 
@@ -26,4 +27,13 @@ open class EventDetails(
     @Enumerated(EnumType.STRING)
     @Column(name = "skill_level", nullable = false)
     var skillLevel: SkillLevel = SkillLevel.ALL_LEVELS
-)
+){
+    fun toDTO(): EventDetailsDTO {
+        return EventDetailsDTO(
+            description = this.description,
+            maxParticipants = this.maxParticipants,
+            costPerPerson = this.costPerPerson,
+            skillLevel = this.skillLevel
+        )
+    }
+}

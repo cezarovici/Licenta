@@ -18,7 +18,7 @@ export default function LoginForm() {
       setSuccess("Logged in successfully! Redirecting...");
 
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = "/business_dashboard";
       }, 1500);
     } catch (err) {
       if (err instanceof Error) {
@@ -30,30 +30,17 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Sign in to your account
-        </h2>
+    <div className="form-container">
+      <div className="form-header">
+        <h2 className="form-title">Sign in to your account</h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="form-box">
         <form onSubmit={handleLogin} className="space-y-6">
-          {error && (
-            <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="rounded-md bg-green-100 p-3 text-sm text-green-700">
-              {success}
-            </div>
-          )}
+          {error && <div className="alert alert-error">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-900"
-            >
+            <label htmlFor="username" className="form-label">
               Username
             </label>
             <input
@@ -63,15 +50,12 @@ export default function LoginForm() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-input"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-900"
-            >
+            <label htmlFor="password" className="form-label">
               Password
             </label>
             <input
@@ -81,15 +65,12 @@ export default function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-input"
             />
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-white font-semibold hover:bg-indigo-500"
-            >
+            <button type="submit" className="btn-primary w-full">
               Sign in
             </button>
           </div>

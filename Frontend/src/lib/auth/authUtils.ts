@@ -7,8 +7,6 @@ export type UserType = "CLIENT" | "BUSINESS" | null;
  */
 export const getUserTypeFromBackend = async (): Promise<UserType> => {
   if (typeof window === "undefined") {
-    // Nu putem face apeluri API pe server side dacă nu e Node.js context complet
-    // În Astro, componentele React se rulează client-side pentru client:load
     return null;
   }
 
@@ -19,12 +17,12 @@ export const getUserTypeFromBackend = async (): Promise<UserType> => {
   }
 
   try {
-    const apiUrl = `http://localhost:8080/api/user-type/me`;
+    const apiUrl = `http://localhost:8080/api/user-type/`;
 
     const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Trimitem tokenul pentru autentificare
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -33,12 +31,11 @@ export const getUserTypeFromBackend = async (): Promise<UserType> => {
       console.error(
         `Failed to fetch user type: ${response.status} - ${response.statusText}`
       );
-      // Poți arunca o eroare sau returna null
       return null;
     }
 
     const data = await response.json();
-    const fetchedUserType = data.userType as UserType; // Presupunem că backend-ul returnează { userType: "CLIENT" }
+    const fetchedUserType = data.userType as UserType;
 
     if (fetchedUserType === "CLIENT" || fetchedUserType === "BUSINESS") {
       return fetchedUserType;

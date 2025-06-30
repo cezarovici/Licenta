@@ -9,9 +9,7 @@ const isActive = href === Astro.url.pathname;
   class:list={[
     "px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200",
     {
-      // Aplicăm aceste clase doar dacă link-ul este activ
       "bg-slate-800 text-orange-500": isActive,
-      // Aplicăm aceste clase doar dacă link-ul NU este activ
       "text-slate-300 hover:bg-slate-700 hover:text-white": !isActive,
     },
   ]}

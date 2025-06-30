@@ -1,5 +1,10 @@
 package com.cezar.core.domain.model.event
 
+import com.cezar.core.application.dto.EventDetailDTO
+import com.cezar.core.application.dto.EventSummaryDTO
+import com.cezar.core.application.dto.business.EventDTO
+import com.cezar.core.application.service.location.toEventsDTO
+import com.cezar.core.application.service.location.toSummaryDTO
 import com.cezar.core.domain.model.client.ClientEntity
 import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
@@ -23,7 +28,7 @@ open class EventEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var type: com.cezar.core.domain.model.event.EventType,
+    var type: EventType,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -46,6 +51,37 @@ open class EventEntity(
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
     var photos: MutableSet<EventPhotos> = mutableSetOf()
 ) {
+    fun toSummaryDTO(): EventSummaryDTO {
+        return EventSummaryDTO(
+            id = this.id,
+            title = this.title,
+            sport = this.sport,
+            eventDateTime = this.eventDateTime,
+            type = this.type,
+            status = this.status,
+            // Presupunând că LocationEntity are o metodă toDTO()
+            location = this.location.toSummaryDTO(),
+            participantsCount = this.participations.size
+        )
+    }
+
+    fun toDetailDTO(): EventDetailDTO {
+        return EventDetailDTO(
+            id = this.id,
+            title = this.title,
+            sport = this.sport,
+            eventDateTime = this.eventDateTime,
+            type = this.type,
+            status = this.status,
+            creator = this.creator.toDTO(),
+            location = this.location.toEventsDTO(),
+            details = this.details?.toDTO(),
+            photos = this.photos.map { it.toDTO() }.toSet(),
+            participations = this.participations.map { it.toDTO() }.toSet(),
+            participantsCount = this.participations.size
+        )
+    }
+
     fun addDetails(details: EventDetails) {
         this.details = details
         details.event = this

@@ -1,17 +1,49 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
 
-/* styles.css */
-:root {
-  --color-primary: #4f46e5; /* Indigo 600 */
-  --color-primary-hover: #4338ca; /* Indigo 500 */
-  --color-text-dark: #303135; /* Gray 900 */
-  --color-text-light: #6b7280; /* Gray 500 */
-  --color-border: #d1d5db; /* Gray 300 */
-  --color-bg-light: #ffffff; /* White */
-}
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+
+@import "./components/buttons.css";
+@import "./components/cards.css";
+@import "./components/layout.css";
+
+@import "./forms/forms.css";
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: var(--color-bg-light);
-  color: var(--color-text-dark);
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-heading {
+  color: var(--color-heading);
+}
+
+.bg-main {
+  background-color: var(--color-bg);
+}
+
+.bg-section {
+  background-color: var(--color-bg-section);
+}
+
+.border-standard {
+  border-color: var(--color-border);
 }

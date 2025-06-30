@@ -4,9 +4,7 @@ import RegistrationWizard from "../components/registration/RegistrationWizard";
 ---
 
 <Layout title="Create Your Account">
-  <main
-    class="bg-slate-900 min-h-screen flex items-center justify-center py-10 px-4"
-  >
+  <main class="page-main">
     <RegistrationWizard client:load />
   </main>
 </Layout>
@@ -22,7 +20,18 @@ import RegistrationWizard from "../components/registration/RegistrationWizard";
       transform: translateY(0);
     }
   }
+
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .page-main {
+    min-height: 100vh;
+    padding: var(--spacing-xl, 4rem) 1rem;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 </style>
