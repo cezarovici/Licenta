@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/api/business-profiles/{businessAccountId}/locations/{locationId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getLocationById"];
-        put: operations["updateLocation"];
-        post?: never;
-        delete: operations["deleteLocation"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/business-profiles/{businessAccountId}/locations/{locationId}/operating-hours": {
         parameters: {
             query?: never;
@@ -45,6 +29,23 @@ export interface paths {
         };
         get?: never;
         put: operations["updateFacilities"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profile/logo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update business logo URL */
+        put: operations["updateBusinessLogo"];
         post?: never;
         delete?: never;
         options?: never;
@@ -98,6 +99,73 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addPhoto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profile/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add a new photo to the business profile */
+        post: operations["addPhoto_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getLocationById"];
+        put?: never;
+        post?: never;
+        delete: operations["deleteLocation"];
+        options?: never;
+        head?: never;
+        patch: operations["updateLocationDetails"];
+        trace?: never;
+    };
+    "/api/business-profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current business profile details */
+        get: operations["getCurrentBusinessProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update business details (partial update) */
+        patch: operations["updateBusinessDetails"];
         trace?: never;
     };
     "/api/user-type/": {
@@ -164,14 +232,47 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/business-profile/": {
+    "/api/businesses": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getCurrentBusinessProfile"];
+        get: operations["searchBusinesses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/businesses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getBusinessById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profile/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all locations for the current business */
+        get: operations["getMyBusinessLocations"];
         put?: never;
         post?: never;
         delete?: never;
@@ -196,30 +297,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/business-profile/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete a photo by its ID */
+        delete: operations["deletePhoto_1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        LocationUpdateRequest: {
-            name: string;
-            address: string;
-            /** Format: double */
-            latitude?: number;
-            /** Format: double */
-            longitude?: number;
-        };
-        LocationResponse: {
-            /** Format: int64 */
-            id: number;
-            name: string;
-            address: string;
-            /** Format: double */
-            latitude?: number;
-            /** Format: double */
-            longitude?: number;
-            /** Format: int64 */
-            businessId: number;
-        };
         LocalTime: {
             /** Format: int32 */
             hour?: number;
@@ -231,22 +329,25 @@ export interface components {
             nano?: number;
         };
         OperatingHourDTO: {
-            /** @enum {string} */
-            dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+            dayOfWeek: string;
             openTime: components["schemas"]["LocalTime"];
             closeTime: components["schemas"]["LocalTime"];
         };
         UpdateOperatingHoursRequest: {
             hours: components["schemas"]["OperatingHourDTO"][];
         };
-        UpdateLocationFacilitiesRequest: {
+        UpdateFacilitiesRequest: {
             facilityIds: number[];
         };
         FacilityDTO: {
             /** Format: int64 */
             id?: number;
-            name: string;
+            name?: string;
         };
+        UpdateLogoRequest: {
+            logoUrl: string;
+        };
+        Unit: Record<string, never>;
         CompleteClientRegistrationRequest: {
             firstName: string;
             lastName: string;
@@ -275,9 +376,67 @@ export interface components {
             /** Format: int64 */
             businessId: number;
         };
+        LocationResponse: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            address: string;
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+            /** Format: int64 */
+            businessId: number;
+        };
+        PhotoCreateRequest: {
+            url: string;
+            description?: string;
+        };
+        LocationPhotoDTO: {
+            /** Format: int64 */
+            id: number;
+            photoUrl: string;
+            description?: string;
+            isPrimary: boolean;
+        };
+        BusinessPhotoDTO: {
+            /** Format: int64 */
+            id: number;
+            photoUrl: string;
+            description?: string;
+            isPrimary: boolean;
+        };
+        LocationUpdateRequest: {
+            name?: string;
+            address?: string;
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+        };
+        BusinessUpdateRequest: {
+            name?: string;
+            logoUrl?: string;
+            description?: string;
+            websiteUrl?: string;
+            phoneNumber?: string;
+            email?: string;
+        };
+        BusinessDTO: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            logoUrl?: string;
+            photos: components["schemas"]["BusinessPhotoDTO"][];
+            locations: components["schemas"]["LocationSummaryDTO"][];
+            description?: string;
+            websiteUrl?: string;
+            phoneNumber?: string;
+            email?: string;
+        };
         LocationSummaryDTO: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             name: string;
             address: string;
             /** Format: double */
@@ -292,7 +451,7 @@ export interface components {
         };
         LocationDetailDTO: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             name: string;
             address: string;
             /** Format: double */
@@ -306,12 +465,6 @@ export interface components {
             /** Format: int32 */
             upcomingEventsCount: number;
         };
-        LocationPhotoDTO: {
-            /** Format: int64 */
-            id?: number;
-            url: string;
-            description?: string;
-        };
         ClientProfileDTO: {
             /** Format: int64 */
             accountId: number;
@@ -320,25 +473,11 @@ export interface components {
             profilePhotoUrl: string;
             bio?: string;
         };
-        BusinessDetailDTO: {
-            businessName: string;
-            logoUrl?: string;
-            details: components["schemas"]["BusinessDetailsDTO"];
-            photos: components["schemas"]["BusinessPhotoDTO"][];
-            locations: components["schemas"]["LocationSummaryDTO"][];
-        };
-        BusinessDetailsDTO: {
-            description?: string;
-            websiteUrl?: string;
-            phoneNumber?: string;
-            email?: string;
-        };
-        BusinessPhotoDTO: {
+        BusinessSummaryDTO: {
             /** Format: int64 */
             id: number;
-            photoUrl: string;
-            description?: string;
-            isPrimary: boolean;
+            name: string;
+            logoUrl?: string;
         };
     };
     responses: never;
@@ -349,77 +488,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getLocationById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                businessAccountId: number;
-                locationId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LocationResponse"];
-                };
-            };
-        };
-    };
-    updateLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                businessAccountId: number;
-                locationId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LocationUpdateRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LocationResponse"];
-                };
-            };
-        };
-    };
-    deleteLocation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                businessAccountId: number;
-                locationId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     updateOperatingHours: {
         parameters: {
             query?: never;
@@ -459,7 +527,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateLocationFacilitiesRequest"];
+                "application/json": components["schemas"]["UpdateFacilitiesRequest"];
             };
         };
         responses: {
@@ -470,6 +538,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["FacilityDTO"][];
+                };
+            };
+        };
+    };
+    updateBusinessLogo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLogoRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
                 };
             };
         };
@@ -566,6 +658,172 @@ export interface operations {
             };
         };
     };
+    addPhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhotoCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationPhotoDTO"];
+                };
+            };
+        };
+    };
+    addPhoto_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhotoCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["BusinessPhotoDTO"];
+                };
+            };
+        };
+    };
+    getLocationById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationDetailDTO"];
+                };
+            };
+        };
+    };
+    deleteLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateLocationDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LocationUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationResponse"];
+                };
+            };
+        };
+    };
+    getCurrentBusinessProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["BusinessDTO"];
+                };
+            };
+        };
+    };
+    updateBusinessDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["BusinessDTO"];
+                };
+            };
+        };
+    };
     getMyUserType: {
         parameters: {
             query?: never;
@@ -654,7 +912,7 @@ export interface operations {
             };
         };
     };
-    getCurrentBusinessProfile: {
+    searchBusinesses: {
         parameters: {
             query?: never;
             header?: never;
@@ -669,7 +927,49 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["BusinessDetailDTO"];
+                    "*/*": components["schemas"]["BusinessSummaryDTO"][];
+                };
+            };
+        };
+    };
+    getBusinessById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["BusinessDTO"];
+                };
+            };
+        };
+    };
+    getMyBusinessLocations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["BusinessLocationsDTO"];
                 };
             };
         };
@@ -681,6 +981,26 @@ export interface operations {
             path: {
                 businessAccountId: number;
                 locationId: number;
+                photoId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deletePhoto_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 photoId: number;
             };
             cookie?: never;

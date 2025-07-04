@@ -1,6 +1,6 @@
 package com.cezar.core.domain.model.locations
 
-import com.cezar.core.application.dto.business.LocationPhotoDTO
+import com.cezar.core.application.dto.location.LocationPhotoDTO
 import jakarta.persistence.*
 
 @Entity
@@ -21,8 +21,8 @@ open class LocationPhotos(
     var location: LocationEntity? = null
 ){
     fun toDTO(): LocationPhotoDTO = LocationPhotoDTO(
-        id = this.id,
-        url = this.photoUrl,
+        id = this.id!!,
+        photoUrl = this.photoUrl,
         description = this.caption
     )
 }

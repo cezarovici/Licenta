@@ -1,75 +1,123 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
-import type { components } from "../types/api.generated";
+import type { BusinessUpdatePayload } from "../types/api";
+import { api } from "../types/api/fetch";
 
-type BusinessProfileResponse = components["schemas"]["BusinessDetailDTO"];
-
-export interface BusinessProfileDto {
-  businessName: string;
-  description: string;
-  websiteUrl: string;
-  phoneNumber: string;
-  logoUrl: string;
-}
-
-const initialFormData: BusinessProfileDto = {
-  businessName: "",
-  description: "",
-  websiteUrl: "",
-  phoneNumber: "",
-  logoUrl: "",
-};
-
-import { getCurrentBusinessProfile } from "../lib/business/businessApi";
+type StatusMessage = {
+  type: "success" | "error";
+  message: string;
+} | null;
 
 export const useBusinessProfile = () => {
-  const [profile, setProfile] = useState<BusinessProfileResponse | null>(null);
-  const [formData, setFormData] = useState<BusinessProfileDto>(initialFormData);
+  const queryClient = useQueryClient();
+  const [statusMessage, setStatusMessage] = useState<StatusMessage>(null);
 
-  const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<{
-    type: "success" | "error" | "info" | "warning";
-    message: string;
-  } | null>(null);
+  // 1. HOOK PENTRU PRELUAREA DATELOR (QUERY)
+  // ---------------------------------------------
+  const queryKey = ["get", "/api/business-profile"];
+  const {
+    data: profile,
+    isLoading: isProfileLoading,
+    refetch: refreshProfile,
+  } = api.useQuery("get", "/api/business-profile");
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      setStatusMessage(null);
-      try {
-        const userProfile = await getCurrentBusinessProfile();
-        setProfile(userProfile);
+  const invalidateAndRefresh = () => {
+    queryClient.invalidateQueries({ queryKey });
+    refreshProfile();
+  };
 
-        setFormData({
-          businessName: userProfile.businessName ?? "",
-          logoUrl: userProfile.logoUrl ?? "",
-          description: userProfile.details.description ?? "",
-          websiteUrl: userProfile.details.websiteUrl ?? "",
-          phoneNumber: userProfile.details.phoneNumber ?? "",
+  // 2. HOOK-URI PENTRU MODIFICAREA DATELOR (MUTATIONS)
+  // ----------------------------------------------------
+
+  // Mutație pentru actualizarea detaliilor profilului
+  const { mutate: updateProfile, isPending: isUpdating } = api.useMutation(
+    "patch",
+    "/api/business-profile",
+
+    {
+      onSuccess: () => {
+        setStatusMessage({
+          type: "success",
+          message: "Profilul a fost actualizat cu succes!",
         });
-      } catch (err) {
-        console.error("Eroare la preluarea profilului:", err);
+        invalidateAndRefresh();
+      },
+      onError: (error: any) => {
         setStatusMessage({
           type: "error",
-          message:
-            err instanceof Error
-              ? `Eroare: ${err.message}`
-              : "A apărut o eroare necunoscută la preluarea profilului.",
+          message: `Eroare: ${error.message}`,
         });
-      } finally {
-        setLoading(false);
-      }
-    };
+      },
+    }
+  );
 
-    fetchProfile();
-  }, []);
+  // Mutație pentru încărcarea unei noi poze
+  const { mutate: uploadPhoto, isPending: isUploadingPhoto } = api.useMutation(
+    "post",
+    "/api/business-profile/photos",
+    {
+      onSuccess: () => {
+        setStatusMessage({
+          type: "success",
+          message: "Poza a fost încărcată!",
+        });
+        invalidateAndRefresh();
+      },
+      onError: (error: any) => {
+        setStatusMessage({
+          type: "error",
+          message: `Eroare la upload: ${error.message}`,
+        });
+      },
+    }
+  );
+
+  // Mutație pentru ștergerea unei poze
+  const { mutate: deletePhoto, isPending: isDeletingPhoto } = api.useMutation(
+    "delete",
+    "/api/business-profile/photos/{photoId}", // Path-ul conține un parametru
+    {
+      onSuccess: () => {
+        setStatusMessage({ type: "success", message: "Poza a fost ștearsă." });
+        invalidateAndRefresh();
+      },
+      onError: (error: any) => {
+        setStatusMessage({
+          type: "error",
+          message: `Eroare la ștergere: ${error.message}`,
+        });
+      },
+    }
+  );
+
+  // 3. LOGICA COMBINATĂ ȘI VALOAREA RETURNATĂ
+  // -----------------------------------------------
+
+  // Combinăm toate stările `isPending` într-una singură
+  const isSubmitting = isUpdating || isUploadingPhoto || isDeletingPhoto;
+
+  // Expunem funcții curate către componentă
+  const handleUpdateProfile = (payload: BusinessUpdatePayload) => {
+    updateProfile({ body: payload });
+  };
+
+  const handleUploadPhoto = (body: { url: string; description?: string }) => {
+    uploadPhoto(body);
+  };
+
+  const handleDeletePhoto = (photoId: number) => {
+    deletePhoto({ params: { path: { photoId } } });
+  };
 
   return {
     profile,
-    formData,
-    loading,
+    isLoading: isProfileLoading,
     isSubmitting,
     statusMessage,
+    refreshProfile,
+    updateProfile: handleUpdateProfile,
+    uploadPhoto: handleUploadPhoto,
+    deletePhoto: handleDeletePhoto,
   };
 };

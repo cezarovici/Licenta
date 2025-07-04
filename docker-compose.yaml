@@ -1,131 +1,164 @@
-services:
-  service-discovery-server: 
-    build:
-      context: ./ServiceDiscoveryServer
-      dockerfile: ./Dockerfile
-    ports: 
-      - "8761:8761"
-    networks:
+  services:
+    service-discovery-server: 
+      build:
+        context: ./ServiceDiscoveryServer
+        dockerfile: ./Dockerfile
+      ports: 
+        - "8761:8761"
+      networks:
+        - app-network
+
+    api-gateway:
+      build:
+        context: ./ApiGateway
+        dockerfile: ./Dockerfile
+      ports:
+        - "8080:8080" 
+      depends_on:
+        - service-discovery-server
+        - redis
+      networks:
+        - app-network
+      environment:
+        SPRING_REDIS_HOST: redis
+        SPRING_REDIS_PORT: 6379
+
+    core-functionality:
+      build:
+        context: ./Core
+        dockerfile: ./Dockerfile
+      deploy:
+        replicas: 1
+      ports: 
+        - "8083:8083"
+      depends_on:
+        - service-discovery-server
+        - core-functionality-db
+      networks:
+        - app-network
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://core-functionality-db:5432/coredatabase
+        SPRING_DATASOURCE_USERNAME: coreuser
+        SPRING_DATASOURCE_PASSWORD: corepassword
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    core-functionality-db:
+      image: postgres
+      restart: always
+      container_name: core-functionality-db
+      environment:
+        POSTGRES_USER: coreuser
+        POSTGRES_PASSWORD: corepassword
+        POSTGRES_DB: coredatabase
+      ports:
+        - "5433:5432"
+      networks:
+        - app-network
+
+    auth-server:
+      build:
+        context: ./AuthServer
+        dockerfile: ./Dockerfile
+      deploy:
+        replicas: 1
+      depends_on:
+        - service-discovery-server
+        - auth-server-db
+      networks:
+        - app-network
+      volumes:
+        - db-data:/etc/data
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://auth-server-db:5432/authdatabase
+        SPRING_DATASOURCE_USERNAME: authuser
+        SPRING_DATASOURCE_PASSWORD: authpassword
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+    auth-server-db:
+      image: postgres
+      restart: always
+      container_name: auth-server-db
+      environment:
+        POSTGRES_USER: authuser
+        POSTGRES_PASSWORD: authpassword
+        POSTGRES_DB: authdatabase
+      ports:
+        - "5432:5432"
+      networks:
+        - app-network
+
+    frontend:
+      build:
+        context: .
+        dockerfile: ./Frontend/Dockerfile
+      ports:
+        - "4321:4321"
+      networks:
+        - app-network
+
+    redis:
+      image: redis:7-alpine
+      container_name: redis
+      restart: always
+      ports:
+        - "6379:6379"
+      networks:
+        - app-network
+
+    redisinsight:
+      image: redis/redisinsight:latest
+      container_name: redisinsight
+      restart: always
+      ports:
+        - "8001:8001"
+      depends_on:
+        - redis
+      networks:
+        - app-network
+
+    seaweedfs-master: 
+      image: chrislusf/seaweedfs
+      ports:
+        - "9333:9333"
+      command: "master"
+      networks:
       - app-network
 
-  api-gateway:
-    build:
-      context: ./ApiGateway
-      dockerfile: ./Dockerfile
-    ports:
-      - "8080:8080" 
-    depends_on:
-      - service-discovery-server
-      - redis
-    networks:
-      - app-network
-    environment:
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-
-  core-functionality:
-    build:
-      context: ./Core
-      dockerfile: ./Dockerfile
-    deploy:
-      replicas: 3 
-    depends_on:
-      - service-discovery-server
-      - core-functionality-db
-    networks:
-      - app-network
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://core-functionality-db:5432/coredatabase
-      SPRING_DATASOURCE_USERNAME: coreuser
-      SPRING_DATASOURCE_PASSWORD: corepassword
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
-  core-functionality-db:
-    image: postgres
-    restart: always
-    container_name: core-functionality-db
-    environment:
-      POSTGRES_USER: coreuser
-      POSTGRES_PASSWORD: corepassword
-      POSTGRES_DB: coredatabase
-    ports:
-      - "5433:5432"
-    networks:
+    seaweedfs-volume:
+      image: chrislusf/seaweedfs
+      ports:
+        - "9090:8080" 
+      command: "volume -mserver=seaweedfs-master:9333"
+      depends_on:
+        - seaweedfs-master
+      networks:
       - app-network
 
-  auth-server:
-    build:
-      context: ./AuthServer
-      dockerfile: ./Dockerfile
-    deploy:
-      replicas: 3
-    depends_on:
-      - service-discovery-server
-      - auth-server-db
-    networks:
-      - app-network
-    volumes:
-      - db-data:/etc/data
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-server-db:5432/authdatabase
-      SPRING_DATASOURCE_USERNAME: authuser
-      SPRING_DATASOURCE_PASSWORD: authpassword
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
-  auth-server-db:
-    image: postgres
-    restart: always
-    container_name: auth-server-db
-    environment:
-      POSTGRES_USER: authuser
-      POSTGRES_PASSWORD: authpassword
-      POSTGRES_DB: authdatabase
-    ports:
-      - "5432:5432"
-    networks:
+    seaweedfs-filer:
+      image: chrislusf/seaweedfs
+      ports:
+        - "8888:8888" 
+      command: "filer -master=seaweedfs-master:9333"
+      depends_on:
+        - seaweedfs-master
+        - seaweedfs-volume
+      networks:
       - app-network
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./Frontend/Dockerfile
-    ports:
-      - "4321:4321"
-    networks:
-      - app-network
+    storage-service-go:
+      build:
+        context: ./StorageService
+        dockerfile: ./Dockerfile
+      ports:
+        - "3008:3008"
+      depends_on:
+        - seaweedfs-filer
+      restart: unless-stopped
+      networks:
+        - app-network
+  volumes:
+    db-data:
 
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-
-  redisinsight:
-    image: redis/redisinsight:latest
-    container_name: redisinsight
-    restart: always
-    ports:
-      - "8001:8001"
-    depends_on:
-      - redis
-    networks:
-      - app-network
-
-  k6:
-    image: grafana/k6
-    volumes:
-      - ./load-tests:/scripts
-    working_dir: /scripts
-    entrypoint: ["k6", "run", "login-test.js"]
-    networks:
-      - app-network
-
-volumes:
-  db-data:
-
-networks:
-  app-network:
-    driver: bridge
+  networks:
+    app-network:
+      driver: bridge

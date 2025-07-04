@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button, FloatingLabel, Spinner, Alert, Card } from "flowbite-react";
 import type { components } from "../../../types/api.generated";
-import {} from "../../../lib/location/locationApi"; // Presupunând că aceste funcții există
 
 type Location = components["schemas"]["LocationCreateRequestDTO"];
 type LocationUpdateRequest = components["schemas"]["LocationUpdateRequest"]; // Presupunând că acest tip există

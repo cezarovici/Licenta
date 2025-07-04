@@ -1,5 +1,7 @@
 ---
 import NavigationBar from "../components/navbar/NavigationBar.astro";
+import AppProvider from "../components/AppProvider.tsx";
+
 import "../styles/global.css";
 ---
 
@@ -17,15 +19,16 @@ import "../styles/global.css";
     class="transition-colors duration-300 bg-[var(--color-bg)] text-[var(--color-text-primary)]"
   >
     <NavigationBar />
-    <slot />
-  </body>
 
-  <style is:global>
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <slot />
+
+    <style is:global>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </body>
 </html>

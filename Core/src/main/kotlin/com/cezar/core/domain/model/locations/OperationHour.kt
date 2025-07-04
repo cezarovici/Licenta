@@ -1,8 +1,7 @@
 package com.cezar.core.domain.model.locations
 
-import com.cezar.core.application.dto.business.OperatingHourDTO
+import com.cezar.core.application.dto.location.OperatingHourDTO
 import jakarta.persistence.*
-import java.time.DayOfWeek
 import java.time.LocalTime
 
 @Entity
@@ -16,19 +15,18 @@ open class OperatingHour(
     @JoinColumn(name = "location_id", nullable = false)
     var location: LocationEntity? = null,
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
-    var dayOfWeek: DayOfWeek,
+    var dayOfWeek: String,
 
     @Column(name = "open_time", nullable = false)
-    var openTime: LocalTime, // ex: 09:00
+    var openTime: LocalTime,
 
     @Column(name = "close_time", nullable = false)
-    var closeTime: LocalTime // ex: 23:00
+    var closeTime: LocalTime
 ){
+
     fun toDTO(): OperatingHourDTO = OperatingHourDTO(
-        id = this.id,
-        dayOfWeek = this.dayOfWeek.name,
+        dayOfWeek = this.dayOfWeek,
         openTime = this.openTime,
         closeTime = this.closeTime
     )

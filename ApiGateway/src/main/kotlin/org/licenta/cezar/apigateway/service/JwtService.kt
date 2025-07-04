@@ -46,9 +46,7 @@ class JwtService {
     fun isTokenValid(token: String): Boolean {
         logger.info("Starting JWT validation for token: {}", token.take(20) + "...")
         return try {
-            // By calling extractAllClaims() here, we ensure signature and structural validity are checked FIRST.
-            // If any of these fail, an exception will be thrown and caught below.
-            val claims = extractAllClaims(token) // This line will throw if token is invalid, malformed, or has bad signature
+            val claims = extractAllClaims(token)
 
             val expirationDate = claims.expiration
             val isExpired = expirationDate.before(Date())

@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import AccountTypeSelector from "./AccountTypeSelector";
-
-import ProfileDetailsForm from "./client/ProfileDetailsForm";
-import ConfirmationStep from "./client/ConfirmationStep";
-import ClientRegistrationForm from "./client/ClientRegistrationForm";
-
-import BusinessCoreDetailsForm from "./business/BusinessCoreDetailsForm";
-import BusinessConfirmationStep from "./business/BusinessConfirmationStep";
-import LocationForm from "./business/LocationForm";
-
 import { registerClientAccount } from "../../lib/register/register_client";
 import { registerBusinessAccount } from "../../lib/register/register_business";
+import AccountTypeSelector from "./AccountTypeSelector";
+import ClientRegistrationForm from "./client/ClientRegistrationForm";
+import ProfileDetailsForm from "./client/ProfileDetailsForm";
+import ConfirmationStep from "./client/ConfirmationStep";
+import BusinessConfirmationStep from "./business/BusinessConfirmationStep";
+import LocationDetailModal from "../profile/business/AddLocationModal";
 
 const initialFormData = {
   firstName: "",
@@ -187,18 +183,12 @@ export default function RegistrationWizard() {
                     />
                   )}
                   {step === 2 && (
-                    <BusinessCoreDetailsForm
+                    <BusinessConfirmationStep
                       formData={formData}
                       handleChange={handleChange}
                     />
                   )}
                   {step === 3 && (
-                    <LocationForm
-                      formData={formData}
-                      handleChange={handleChange}
-                    />
-                  )}
-                  {step === 4 && (
                     <BusinessConfirmationStep formData={formData} />
                   )}
                 </>

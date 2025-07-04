@@ -1,6 +1,6 @@
 package com.cezar.core.domain.model.business
 
-import com.cezar.core.application.dto.business.BusinessDetailsDTO
+
 import jakarta.persistence.*
 
 @Entity
@@ -25,13 +25,4 @@ open class BusinessDetails(
 
     @Column(nullable = true, name = "email")
     var email: String? = null,
-){
-    fun toDTO() : BusinessDetailsDTO {
-        return BusinessDetailsDTO(
-            description = this.description,
-            websiteUrl = this.websiteUrl,
-            phoneNumber = this.phoneNumber,
-            email = this.email,
-        )
-    }
-}
+)

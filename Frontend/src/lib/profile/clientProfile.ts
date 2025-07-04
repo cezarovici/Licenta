@@ -7,7 +7,7 @@ export interface ClientProfile {
   firstName: string;
   lastName: string;
   profilePhotoUrl: string;
-  bio: string | null; // Bio poate fi null
+  bio: string | null;
 }
 
 /**
@@ -31,7 +31,7 @@ export const getCurrentUserProfile = async (): Promise<ClientProfile> => {
 
   // Construim URL-ul către noul endpoint din `core-functionality`,
   // care este expus prin API Gateway pe portul 8080.
-  const apiUrl = `http://localhost:8080/api/client-profile/me`;
+  const apiUrl = `http://localhost:8080/api/client-profile/`;
 
   const response = await fetch(apiUrl, {
     method: "GET",

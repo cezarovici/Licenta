@@ -1,5 +1,6 @@
 package com.cezar.core.domain.model.locations
 
+import com.cezar.core.application.dto.location.LocationPhotoDTO
 import com.cezar.core.domain.model.business.BusinessEntity
 import com.cezar.core.domain.model.event.EventEntity
 import jakarta.persistence.*
@@ -7,7 +8,6 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "locations")
-// open este necesar pentru ca JPA să poată crea proxy-uri
 open class LocationEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

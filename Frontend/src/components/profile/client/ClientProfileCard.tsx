@@ -1,91 +1,114 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getCurrentUserProfile,
   type ClientProfile,
 } from "../../../lib/profile/clientProfile";
 import ProfilePlaceholder from "../ProfilePlaceholder";
+import ProfileHeader from "../business/ProfileHeader";
+import ClientProfileDisplay from "./ClientProfileDisplay";
+import ClientSettingsSection from "./ClientProfileSettingsSection";
+import EditClientProfileModal from "./EditClientProfileModal";
 
 export default function ClientProfileCard() {
   const [profile, setProfile] = useState<ClientProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const userProfile = await getCurrentUserProfile();
-        setProfile(userProfile);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Error fetching client profile"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
+  const fetchProfile = async () => {
+    setLoading(true);
+    try {
+      const userProfile = await getCurrentUserProfile();
+      setProfile(userProfile);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error fetching client profile"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, []);
 
-  if (loading || error) {
-    return <ProfilePlaceholder loading={loading} error={error} />;
-  }
+  const handleOpenEditModal = () => {
+    setSaveError(null);
+    setEditModalOpen(true);
+  };
 
-  if (!profile) {
+  const handleCloseEditModal = () => {
+    if (isSaving) return;
+    setEditModalOpen(false);
+  };
+
+  const handleSaveProfile = async (formData: Partial<ClientProfile>) => {
+    if (!profile) return;
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      const updatedProfile = await updateCurrentUserProfile(formData);
+      setProfile(updatedProfile);
+      setEditModalOpen(false);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "A apărut o eroare la salvare.";
+      setSaveError(errorMessage);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (loading || !profile) {
     return (
-      <ProfilePlaceholder loading={false} error="No client profile data." />
+      <div className="max-w-6xl mx-auto p-4 md:p-8">
+        <ProfileHeader
+          title="Profilul Tău"
+          subtitle="Vezi și editează detaliile contului tău."
+        />
+        <ProfilePlaceholder
+          loading={loading}
+          error={error || (!profile ? "No client profile data." : "")}
+        />
+      </div>
     );
   }
 
   return (
-    <div className="max-w-2xl w-full mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
-      <div className="h-32 bg-indigo-500 bg-gradient-to-r from-purple-500 to-indigo-600" />
-      <div className="p-8 -mt-20">
-        <div className="flex flex-col items-center">
-          <img
-            src={profile.profilePhotoUrl}
-            alt={`${profile.firstName} ${profile.lastName}`}
-            className="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
-          />
-          <h1 className="text-3xl font-bold text-gray-800 mt-4">
-            {profile.firstName} {profile.lastName}
-          </h1>
-          <p className="text-sm text-gray-500">
-            Member ID: {profile.accountId}
-          </p>
-        </div>
+    <>
+      <div className="max-w-6xl mx-auto p-4 md:p-8">
+        <ProfileHeader
+          title="Profilul Tău"
+          subtitle="Vezi și editează detaliile contului tău."
+        />
 
-        <div className="mt-8 text-center">
-          <h2 className="text-lg font-semibold text-gray-700">About Me</h2>
-          <p className="text-gray-600 mt-2 italic">
-            {profile.bio || "No biography provided."}
-          </p>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
+          <div className="md:col-span-2">
+            <ClientProfileDisplay profile={profile} />
+          </div>
 
-        <div className="mt-8 border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-semibold text-gray-700 text-center">
-            Settings
-          </h3>
-          <div className="mt-4 flex flex-col sm:flex-row gap-4">
-            <button
-              className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none transition-colors"
-              onClick={() =>
-                alert("Functionality for 'Edit Profile' to be added.")
-              }
-            >
-              Edit Profile
-            </button>
-            <button
-              className="w-full py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 focus:outline-none transition-colors"
-              onClick={() =>
-                alert("Functionality for 'Account Settings' to be added.")
-              }
-            >
-              Account Settings
-            </button>
+          <div className="md:col-span-1 space-y-8">
+            <ClientSettingsSection onEditProfileClick={handleOpenEditModal} />
           </div>
         </div>
       </div>
-    </div>
+
+      {profile && (
+        <EditClientProfileModal
+          show={isEditModalOpen}
+          onClose={handleCloseEditModal}
+          profile={profile}
+          onSave={handleSaveProfile}
+          isSaving={isSaving}
+          errorMessage={saveError}
+        />
+      )}
+    </>
   );
 }

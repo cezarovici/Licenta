@@ -1,9 +1,9 @@
 package com.cezar.core.domain.model.business
 
-import com.cezar.core.application.dto.business.BusinessDetailDTO
+import com.cezar.core.application.dto.business.BusinessDTO
 import com.cezar.core.application.dto.business.BusinessLocationsDTO
 import com.cezar.core.application.dto.business.BusinessSummaryDTO
-import com.cezar.core.application.service.location.toSummaryDTO
+import com.cezar.core.domain.model.locations.toSummaryDTO
 import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -40,18 +40,23 @@ open class BusinessEntity(
 ) {
     fun toSummaryDTO(): BusinessSummaryDTO {
         return BusinessSummaryDTO(
-            businessName = this.businessName,
-            logoUrl = this.logoUrl
+            id = this.id!!,
+            name = this.businessName,
+            logoUrl = this.logoUrl,
         )
     }
 
-    fun toDetailDTO(): BusinessDetailDTO {
-        return BusinessDetailDTO(
-            businessName = this.businessName,
+    fun toDetailDTO(): BusinessDTO {
+        return BusinessDTO(
+            id = this.id!!,
+            name = this.businessName,
             logoUrl = this.logoUrl,
-            details = this.details!!.toDTO(),
-            photos = this.photos.map { it.toDTO() }.toSet(),
-            locations = this.locations.map { it.toSummaryDTO() }.toSet()
+            photos = this.photos.map { it.toDTO() }.toMutableSet(),
+            locations = this.locations.map { it.toSummaryDTO() }.toSet(),
+            websiteUrl = this.details?.websiteUrl,
+            phoneNumber = this.details?.phoneNumber,
+            email = this.details?.email,
+            description = this.details?.description,
         )
     }
 

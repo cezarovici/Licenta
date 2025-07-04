@@ -1,6 +1,6 @@
 package com.cezar.core.domain.model.locations
 
-import com.cezar.core.application.dto.business.FacilityDTO
+import com.cezar.core.application.dto.shared.FacilityDTO
 import jakarta.persistence.*
 
 @Entity

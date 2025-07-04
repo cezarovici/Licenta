@@ -2,6 +2,8 @@ package com.cezar.core.application.service.location
 
 import com.cezar.core.application.dto.location.LocationDetailDTO
 import com.cezar.core.application.dto.location.LocationSummaryDTO
+import com.cezar.core.domain.model.locations.toDetailDTO
+import com.cezar.core.domain.model.locations.toSummaryDTO
 import com.cezar.core.domain.repository.LocationRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service

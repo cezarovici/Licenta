@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import LocationPage from "../../components/locations/LocationPage";
+import Dashboard from "../../layouts/Dashboard.astro";
+
+const { locationId: locationIdString } = Astro.params;
+
+const locationId = locationIdString ? parseInt(locationIdString) : undefined;
+---
+
+<Dashboard title="Locatie">
+  <LocationPage locationId={locationId} client:only />
+</Dashboard>

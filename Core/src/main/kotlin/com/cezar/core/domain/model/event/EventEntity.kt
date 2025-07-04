@@ -2,9 +2,8 @@ package com.cezar.core.domain.model.event
 
 import com.cezar.core.application.dto.EventDetailDTO
 import com.cezar.core.application.dto.EventSummaryDTO
-import com.cezar.core.application.dto.business.EventDTO
-import com.cezar.core.application.service.location.toEventsDTO
-import com.cezar.core.application.service.location.toSummaryDTO
+import com.cezar.core.domain.model.locations.toEventsDTO
+import com.cezar.core.domain.model.locations.toSummaryDTO
 import com.cezar.core.domain.model.client.ClientEntity
 import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
