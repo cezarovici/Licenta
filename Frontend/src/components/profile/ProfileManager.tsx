@@ -1,5 +1,5 @@
 import { useUserType } from "../../hooks/useUserType";
-import BusinessProfilePage from "./business/BusinessProfilePage";
+import BusinessProfilePage from "../../features/business-profile/BusinessProfilePage";
 import ClientProfileCard from "./client/ClientProfileCard";
 import ProfilePlaceholder from "./ProfilePlaceholder";
 
@@ -22,9 +22,6 @@ export default function ProfileManager() {
     );
   }
 
-  // Acum, în funcție de userType, randăm componenta corespunzătoare.
-  // Ambele componente vor avea acces la QueryClient deoarece părintele
-  // (AppProvider) le-a oferit contextul.
   return (
     <div className="w-full">
       {userType === "CLIENT" && <ClientProfileCard />}

@@ -1,14 +1,11 @@
 package com.cezar.core.application.controller.registration
 
-import com.cezar.core.application.service.business.BusinessRegistrationService
+import com.cezar.core.application.service.business.BusinessService
 import com.cezar.core.application.service.client.ClientRegistrationService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.*
 
 data class CompleteClientRegistrationRequest(
     val firstName: String,
@@ -34,7 +31,7 @@ data class CompleteBusinessRegistrationRequest(
 @RequestMapping("/api/register")
 class RegistrationController(
     private val clientRegistrationService: ClientRegistrationService,
-    private val businessRegistrationService: BusinessRegistrationService
+    private val businessRegistrationService: BusinessService
 ) {
     private val logger = LoggerFactory.getLogger(RegistrationController::class.java)
 
@@ -54,5 +51,13 @@ class RegistrationController(
 
         businessRegistrationService.registerBusiness(request)
         return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @DeleteMapping("/business/{businessId}")
+    fun unregisterBusiness(@PathVariable businessId: Long): ResponseEntity<Void> {
+        logger.info("Received business request for path: /api/unregister/business")
+        businessRegistrationService.deleteBusiness(businessId)
+
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 }

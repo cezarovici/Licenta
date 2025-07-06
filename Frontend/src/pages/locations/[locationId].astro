@@ -10,5 +10,5 @@ const locationId = locationIdString ? parseInt(locationIdString) : undefined;
 ---
 
 <Dashboard title="Locatie">
-  <LocationPage locationId={locationId} client:only />
+  <LocationPage locationId={locationId} client:load />
 </Dashboard>

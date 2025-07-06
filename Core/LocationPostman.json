@@ -1,0 +1,262 @@
+{
+  "info": {
+    "name": "Licenta API - Management Locații (CRUD Complet)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Pas 1: Creare Locație",
+      "item": [
+        {
+          "name": "Creare Simplă Locație",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              },
+              {
+                "key": "X-Internal-Secret",
+                "value": "{{internalApiSecret}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Teren Simplu de Fotbal\",\n    \"address\": \"Strada Exemplului Nr. 10, Iași\",\n    \"latitude\": 47.1585,\n    \"longitude\": 27.6014,\n    \"businessId\": {{businessAccountId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "business-profiles",
+                "{{businessAccountId}}",
+                "locations"
+              ]
+            },
+            "description": "Creează o locație nouă folosind DTO-ul minimal `LocationCreateRequestDTO`."
+          },
+          "response": []
+        },
+        {
+          "name": "Creare Completă Locație",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              },
+              {
+                "key": "X-Internal-Secret",
+                "value": "{{internalApiSecret}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Complex Sportiv Iloaiei\",\n    \"address\": \"Strada Principală Nr. 1, Podu Iloaiei\",\n    \"latitude\": 47.2089,\n    \"longitude\": 27.2657,\n    \"photos\": [\n        {\n            \"url\": \"https://example.com/photos/teren1.jpg\",\n            \"description\": \"Vedere de ansamblu a terenului principal.\"\n        }\n    ],\n    \"operatingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"openTime\": \"09:00:00\",\n            \"closeTime\": \"22:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"SATURDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"23:59:00\"\n        }\n    ],\n    \"facilityIds\": [\n        1,\n        2\n    ],\n    \"pricingRules\": [\n        {\n            \"ruleName\": \"Preț Weekend\",\n            \"daysOfWeek\": [\n                \"SATURDAY\",\n                \"SUNDAY\"\n            ],\n            \"pricePerHour\": 150.00\n        }\n    ],\n    \"sportConfigurations\": [\n        {\n            \"sportName\": \"Fotbal\",\n            \"surfaceType\": \"Gazon sintetic\",\n            \"recommendedCapacity\": \"5 vs 5\",\n            \"minBookingDuration\": 60,\n            \"bookingSlotIncrement\": 30\n        }\n    ],\n    \"bookingRules\": {\n        \"maxBookingAdvanceDays\": 30,\n        \"cancellationPolicy\": \"MODERATE\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/create-complete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "business-profiles",
+                "{{businessAccountId}}",
+                "locations",
+                "create-complete"
+              ]
+            },
+            "description": "Creează o locație nouă cu toate detaliile posibile, folosind DTO-ul `CreateCompleteLocationRequestDTO`."
+          },
+          "response": []
+        }
+      ],
+      "description": "Folosește unul din aceste request-uri pentru a crea o locație. **Nu uita să copiezi ID-ul locației create și să-l pui în variabila `locationId` a colecției.**"
+    },
+    {
+      "name": "Pas 2: Actualizare Locație",
+      "item": [
+        {
+          "name": "Actualizare Parțială (Nume & Adresă)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              },
+              {
+                "key": "X-Internal-Secret",
+                "value": "{{internalApiSecret}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Terenul de Sport Renovator\",\n    \"address\": \"Bulevardul Independenței Nr. 101, Iași\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "business-profiles",
+                "{{businessAccountId}}",
+                "locations",
+                "{{locationId}}"
+              ]
+            },
+            "description": "Actualizează detaliile de bază ale unei locații existente.\n\nFolosește DTO-ul `LocationUpdateRequest`, unde toate câmpurile sunt opționale."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizare Completă Program",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              },
+              {
+                "key": "X-Internal-Secret",
+                "value": "{{internalApiSecret}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"hours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"21:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"21:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"21:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"21:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"23:00:00\"\n        },\n        {\n            \"dayOfWeek\": \"SATURDAY\",\n            \"openTime\": \"09:00:00\",\n            \"closeTime\": \"23:00:00\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}/config/operating-hours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "business-profiles",
+                "{{businessAccountId}}",
+                "locations",
+                "{{locationId}}",
+                "config",
+                "operating-hours"
+              ]
+            },
+            "description": "Înlocuiește complet programul de funcționare existent. Duminica este acum închisă.\n\nAcest request folosește DTO-ul `UpdateOperatingHoursRequest` și demonstrează strategia \"clear and replace\" implementată în `LocationConfigService`."
+          },
+          "response": []
+        }
+      ],
+      "description": "Request-uri pentru a modifica o locație existentă. Asigură-te că ai setat `locationId`."
+    },
+    {
+      "name": "Pas 3: Ștergere Locație",
+      "item": [
+        {
+          "name": "Ștergere Locație",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              },
+              {
+                "key": "X-Internal-Secret",
+                "value": "{{internalApiSecret}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "business-profiles",
+                "{{businessAccountId}}",
+                "locations",
+                "{{locationId}}"
+              ]
+            },
+            "description": "Șterge permanent o locație și toate datele asociate (poze, program, reguli, etc.) datorită setării `orphanRemoval = true` în entitate."
+          },
+          "response": []
+        }
+      ],
+      "description": "Request pentru a șterge o locație. Asigură-te că ai setat `locationId`."
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "businessAccountId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "internalApiSecret",
+      "value": "your-super-secret-key",
+      "type": "string"
+    },
+    {
+      "key": "locationId",
+      "value": "ID-UL_LOCATIEI_CREATE",
+      "type": "string",
+      "description": "Pune aici ID-ul returnat de unul din request-urile de creare."
+    }
+  ]
+}

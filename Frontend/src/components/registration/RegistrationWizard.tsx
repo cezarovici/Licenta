@@ -6,7 +6,6 @@ import ClientRegistrationForm from "./client/ClientRegistrationForm";
 import ProfileDetailsForm from "./client/ProfileDetailsForm";
 import ConfirmationStep from "./client/ConfirmationStep";
 import BusinessConfirmationStep from "./business/BusinessConfirmationStep";
-import LocationDetailModal from "../profile/business/AddLocationModal";
 
 const initialFormData = {
   firstName: "",

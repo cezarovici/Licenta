@@ -20,6 +20,7 @@ data class BusinessDTO(
 )
 
 data class BusinessLocationsDTO(
+        val id: Long,
         val businessName: String,
         val website: String?,
         val locations: Set<LocationSummaryDTO>

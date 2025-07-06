@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import BusinessProfilePage from "./BusinessProfilePage";
+import BusinessProfilePage from "../../../features/business-profile/BusinessProfilePage";
 
 const queryClient = new QueryClient();
 

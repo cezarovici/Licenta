@@ -20,7 +20,7 @@ class GlobalApiErrorHandler {
     @ExceptionHandler(ResponseStatusException::class)
     fun handleResponseStatusException(ex: ResponseStatusException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(ex.statusCode.value(), ex.reason)
-        logger.warn("Handled business exception: Status ${ex.statusCode.value()}, Reason: ${ex.reason}")
+        logger.warn("Handled business exception: Status ${ex.statusCode.value()}, Reason: ${ex.reason}, Message: ${ex.message}")
         return ResponseEntity(errorResponse, ex.statusCode)
     }
 

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface BusinessRepository : JpaRepository<BusinessEntity, Long> {
     fun findByAccountId(accountId: Long): BusinessEntity?
+    fun existsByAccountId(accountId: Long): Boolean
+    fun deleteByAccountId(accountId: Long) // Această metodă trebuie să fie tranzacțională
 }

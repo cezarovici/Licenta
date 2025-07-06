@@ -7,6 +7,7 @@ import com.cezar.core.domain.model.locations.toSummaryDTO
 import com.cezar.core.domain.model.client.ClientEntity
 import com.cezar.core.domain.model.locations.LocationEntity
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
@@ -43,7 +44,11 @@ open class EventEntity(
 
     @OneToOne(mappedBy = "event", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = false)
     var details: EventDetails? = null,
+    @Column(name = "duration_in_minutes", nullable = false)
+    var durationInMinutes: Int,
 
+    @Column(name = "total_booking_cost", nullable = false)
+    var totalBookingCost: BigDecimal = BigDecimal.ZERO,
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
     var participations: MutableSet<EventParticipation> = mutableSetOf(),
 
@@ -58,7 +63,6 @@ open class EventEntity(
             eventDateTime = this.eventDateTime,
             type = this.type,
             status = this.status,
-            // Presupunând că LocationEntity are o metodă toDTO()
             location = this.location.toSummaryDTO(),
             participantsCount = this.participations.size
         )

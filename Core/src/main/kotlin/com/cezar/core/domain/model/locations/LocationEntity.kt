@@ -6,6 +6,12 @@ import com.cezar.core.domain.model.event.EventEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
+enum class CancellationPolicy {
+    FLEXIBLE,
+    MODERATE,
+    STRICT
+}
+
 @Entity
 @Table(name = "locations")
 open class LocationEntity(
@@ -52,7 +58,21 @@ open class LocationEntity(
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+
+    @OneToMany(mappedBy = "location", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var pricingRules: MutableSet<PricingRule> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "location", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var sportConfigurations: MutableSet<SportConfiguration> = mutableSetOf(),
+
+    @Column(name = "max_booking_advance_days")
+    var maxBookingAdvanceDays: Int? = 30,
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cancellation_policy_type")
+    var cancellationPolicy: CancellationPolicy = CancellationPolicy.MODERATE,
 ) {
     /**
      * Helper pentru a menține consistența relației bidirecționale cu LocationPhotos.

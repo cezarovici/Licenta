@@ -25,7 +25,7 @@ data class PhotoCreateRequest(
  * DTO pentru răspunsul la crearea/citirea unei fotografii.
  */
 data class LocationPhotoDTO(
-    val id: Long,
+    val id: Long?,
     val photoUrl: String,
     val description: String?,
     val isPrimary: Boolean = false // Poate fi extins ulterior

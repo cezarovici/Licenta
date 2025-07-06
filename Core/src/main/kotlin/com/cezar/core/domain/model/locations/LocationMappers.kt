@@ -1,9 +1,6 @@
 package com.cezar.core.domain.model.locations
 
-import com.cezar.core.application.dto.location.LocationDetailDTO
-import com.cezar.core.application.dto.location.LocationEventsDTO
-import com.cezar.core.application.dto.location.LocationResponse
-import com.cezar.core.application.dto.location.LocationSummaryDTO
+import com.cezar.core.application.dto.location.*
 import java.time.LocalDateTime
 
 fun LocationEntity.toSummaryDTO(): LocationSummaryDTO {
@@ -27,7 +24,10 @@ fun LocationEntity.toDetailDTO(): LocationDetailDTO {
         photos = this.photos.map { it.toDTO() }.toSet(),
         operatingHours = this.operatingHours.map { it.toDTO() }.toSet(),
         facilities = this.facilities.map { it.toDTO() }.toSet(),
-        upcomingEventsCount = this.events.count { it.eventDateTime.isAfter(LocalDateTime.now()) }
+        upcomingEventsCount = this.events.count { it.eventDateTime.isAfter(LocalDateTime.now()) },
+        pricingRules = this.pricingRules.map{ it.toDTO() }.toSet(),
+        sportConfigurations = this.sportConfigurations.map { it.toDTO() }.toSet(),
+        bookingRules = BookingRulesInfoDTO(this.maxBookingAdvanceDays, this.cancellationPolicy )
     )
 }
 

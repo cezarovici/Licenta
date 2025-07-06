@@ -24,8 +24,6 @@ export const uploadFileToObjectStorage = async (
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      // NU adăuga 'Content-Type' aici. Browser-ul îl va seta automat
-      // corect pentru FormData (cu boundary-ul necesar).
       Authorization: `Bearer ${token}`,
     },
     body: formData,

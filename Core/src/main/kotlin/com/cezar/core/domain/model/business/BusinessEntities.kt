@@ -62,6 +62,7 @@ open class BusinessEntity(
 
     fun toLocationsDTO(): BusinessLocationsDTO {
         return BusinessLocationsDTO(
+            id= this.id!!,
             businessName = this.businessName,
             website = this.details?.websiteUrl,
             locations = this.locations.map { it.toSummaryDTO() }.toSet()

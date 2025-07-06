@@ -3,6 +3,7 @@ package com.cezar.core.application.service.business
 import com.cezar.core.application.dto.business.BusinessDTO
 import com.cezar.core.application.dto.business.BusinessSummaryDTO
 import com.cezar.core.application.dto.business.BusinessLocationsDTO
+import com.cezar.core.application.dto.business.BusinessPhotoDTO
 import com.cezar.core.domain.repository.BusinessRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service

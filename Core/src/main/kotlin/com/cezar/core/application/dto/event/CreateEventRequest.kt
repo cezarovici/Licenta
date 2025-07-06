@@ -25,10 +25,5 @@ data class CreateEventRequest(
 
     val description: String?,
 
-    @field:Min(value = 2, message = "Maximum participants must be at least 2")
-    val maxParticipants: Int?,
-
-    val costPerPerson: BigDecimal?,
-
     val skillLevel: com.cezar.core.domain.model.event.SkillLevel?
 )

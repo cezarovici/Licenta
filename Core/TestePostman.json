@@ -1,0 +1,647 @@
+{
+    "info": {
+        "_postman_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+        "name": "Core App API Test",
+        "description": "O colecție Postman generată automat pentru a testa toate funcționalitățile de bază, bazată pe codul sursă furnizat.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Registration",
+            "item": [
+                {
+                    "name": "Register Client",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"firstName\": \"Ion\",\n    \"lastName\": \"Popescu\",\n    \"email\": \"ion.popescu@example.com\",\n    \"password\": \"Password123!\",\n    \"profilePhotoUrl\": \"http://example.com/photo.jpg\",\n    \"bio\": \"Entuziast al sportului.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/register/client",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "register",
+                                "client"
+                            ]
+                        },
+                        "description": "Înregistrează un utilizator nou de tip client."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Register Business",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"firstName\": \"Gheorghe\",\n    \"lastName\": \"Ionescu\",\n    \"email\": \"gheorghe.ionescu@business.com\",\n    \"password\": \"BusinessPass123!\",\n    \"businessName\": \"Teren Sportiv SRL\",\n    \"businessDescription\": \"Cel mai bun teren de fotbal din oraș.\",\n    \"locationName\": \"Teren Central\",\n    \"locationAddress\": \"Str. Principală, Nr. 1\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/register/business",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "register",
+                                "business"
+                            ]
+                        },
+                        "description": "Înregistrează un utilizator nou de tip business."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User Type",
+            "item": [
+                {
+                    "name": "Get My User Type",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user-type/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user-type",
+                                ""
+                            ]
+                        },
+                        "description": "Returnează tipul de utilizator (CLIENT sau BUSINESS) pentru contul autentificat."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Client Profile",
+            "item": [
+                {
+                    "name": "Get Current User Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/client-profile/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "client-profile",
+                                ""
+                            ]
+                        },
+                        "description": "Obține profilul clientului autentificat."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Public Business",
+            "item": [
+                {
+                    "name": "Search All Businesses",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/businesses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "businesses"
+                            ]
+                        },
+                        "description": "Returnează o listă sumară a tuturor afacerilor."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Business Profile Management",
+            "item": [
+                {
+                    "name": "Get Current Business Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profile"
+                            ]
+                        },
+                        "description": "Obține detaliile complete pentru profilul de business autentificat."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Business Details (PATCH)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Noul Nume Business\",\n    \"description\": \"O descriere actualizată.\",\n    \"websiteUrl\": \"http://new-website.com\",\n    \"phoneNumber\": \"0712345678\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profile"
+                            ]
+                        },
+                        "description": "Actualizează parțial detaliile unui business."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Business Logo",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"logoUrl\": \"http://example.com/new_logo.png\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profile/logo",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profile",
+                                "logo"
+                            ]
+                        },
+                        "description": "Actualizează URL-ul logo-ului pentru business."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get My Business Locations",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profile/locations",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profile",
+                                "locations"
+                            ]
+                        },
+                        "description": "Obține toate locațiile pentru business-ul curent."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Business Location Management",
+            "item": [
+                {
+                    "name": "Create Location",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Locație Nouă\",\n    \"address\": \"Str. Viitorului, Nr. 10\",\n    \"latitude\": 47.123,\n    \"longitude\": 27.456,\n    \"businessId\": {{businessId}}\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profiles",
+                                "{{businessAccountId}}",
+                                "locations"
+                            ]
+                        },
+                        "description": "Creează o locație nouă pentru un business."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Locations for Business",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profiles",
+                                "{{businessAccountId}}",
+                                "locations"
+                            ]
+                        },
+                        "description": "Obține toate locațiile pentru un business specific."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Location by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profiles",
+                                "{{businessAccountId}}",
+                                "locations",
+                                "{{locationId}}"
+                            ]
+                        },
+                        "description": "Obține detalii despre o locație specifică a unui business."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Location Details (PATCH)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Nume Locație Actualizat\",\n    \"address\": \"Adresă Nouă, Nr. 99\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profiles",
+                                "{{businessAccountId}}",
+                                "locations",
+                                "{{locationId}}"
+                            ]
+                        },
+                        "description": "Actualizează parțial detaliile unei locații."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Location",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{businessAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/business-profiles/{{businessAccountId}}/locations/{{locationId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "business-profiles",
+                                "{{businessAccountId}}",
+                                "locations",
+                                "{{locationId}}"
+                            ]
+                        },
+                        "description": "Șterge o locație."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Public Location",
+            "item": [
+                {
+                    "name": "Get All Locations Summary",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/locations",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "locations"
+                            ]
+                        },
+                        "description": "Obține o listă sumară cu toate locațiile publice."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Location Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/locations/{{locationId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "locations",
+                                "{{locationId}}"
+                            ]
+                        },
+                        "description": "Obține detalii complete pentru o locație publică specifică."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Event Management",
+            "item": [
+                {
+                    "name": "Get All Upcoming Public Events",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events"
+                            ]
+                        },
+                        "description": "Obține o listă cu toate evenimentele publice viitoare."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Event Details by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/{{eventId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "{{eventId}}"
+                            ]
+                        },
+                        "description": "Obține detalii complete pentru un eveniment specific."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Event",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Meci de fotbal amical\",\n    \"sport\": \"Fotbal\",\n    \"eventDateTime\": \"2025-08-15T18:00:00\",\n    \"locationId\": {{locationId}},\n    \"eventType\": \"PUBLIC\",\n    \"description\": \"Veniți să jucăm un meci!\",\n    \"maxParticipants\": 10,\n    \"costPerPerson\": 15.50,\n    \"skillLevel\": \"ALL_LEVELS\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events"
+                            ]
+                        },
+                        "description": "Creează un eveniment nou."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Join Event",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/{{eventId}}/join",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "{{eventId}}",
+                                "join"
+                            ]
+                        },
+                        "description": "Permite unui client să se alăture unui eveniment."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Leave Event",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/{{eventId}}/join",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "{{eventId}}",
+                                "join"
+                            ]
+                        },
+                        "description": "Permite unui client să părăsească un eveniment."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get My Participations",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-User-Id",
+                                "value": "{{clientAccountId}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/events/my-participations",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "events",
+                                "my-participations"
+                            ]
+                        },
+                        "description": "Obține toate evenimentele la care participă clientul curent."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

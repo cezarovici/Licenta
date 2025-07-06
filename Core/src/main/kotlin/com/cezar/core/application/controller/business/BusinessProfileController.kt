@@ -1,9 +1,11 @@
 package com.cezar.core.application.controller.business
 
 import com.cezar.core.application.dto.business.*
+import com.cezar.core.application.dto.location.LocationPhotoDTO
 import com.cezar.core.application.dto.location.PhotoCreateRequest
 import com.cezar.core.application.service.business.BusinessProfileService
 import com.cezar.core.application.service.business.BusinessQueryService
+import com.cezar.core.application.service.location.LocationPhotoService
 import com.cezar.core.client.StorageClient
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -22,11 +24,18 @@ import org.springframework.web.multipart.MultipartFile
 class BusinessProfileController(
     private val businessProfileService: BusinessProfileService, // Service pentru Comenzi (scriere)
     private val businessQueryService: BusinessQueryService,   // Service pentru Interogări (citire)
-    private val storageClient: StorageClient
+    private val storageClient: StorageClient,
+    private val locationManagementService: LocationPhotoService
 ) {
     private val logger = LoggerFactory.getLogger(BusinessProfileController::class.java)
 
     // --- QUERY ENDPOINTS (folosesc BusinessQueryService) ---
+
+    @GetMapping("/{businessAccountId}/photos")
+    fun getAllBusinessPhotos(@PathVariable businessAccountId: Long): ResponseEntity<List<LocationPhotoDTO>> {
+        val photos = locationManagementService.getAllPhotosForBusiness(businessAccountId)
+        return ResponseEntity.ok(photos)
+    }
 
     @GetMapping
     @Operation(summary = "Get current business profile details")
@@ -101,6 +110,8 @@ class BusinessProfileController(
         businessProfileService.deletePhoto(accountId, photoId)
         return ResponseEntity.noContent().build()
     }
+
+
 
     private fun getCurrentAccountId(): Long {
         return SecurityContextHolder.getContext().authentication.name.toLong()

@@ -90,7 +90,8 @@ class AuthenticationFilter(
             "/api/register/client",
             "/api/register/business",
             "/v3/api-docs",
-            "/idm/auth/login"
+            "/idm/auth/login",
+            "/idm/auth/signup"
         )
         val isPublic = publicEndpoints.any { path.startsWith(it) }
         logger.debug("Verificare endpoint public pentru $path: $isPublic")

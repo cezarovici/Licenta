@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/business-profiles/{businessAccountId}/locations/{locationId}/operating-hours": {
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/operating-hours": {
         parameters: {
             query?: never;
             header?: never;
@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/business-profiles/{businessAccountId}/locations/{locationId}/facilities": {
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/facilities": {
         parameters: {
             query?: never;
             header?: never;
@@ -29,6 +29,22 @@ export interface paths {
         };
         get?: never;
         put: operations["updateFacilities"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/booking-rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateBookingRules"];
         post?: never;
         delete?: never;
         options?: never;
@@ -85,6 +101,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/events/{eventId}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Join an event (for authenticated clients) */
+        post: operations["joinEvent"];
+        /** Leave an event (for authenticated clients) */
+        delete: operations["leaveEvent"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/business-profiles/{businessAccountId}/locations": {
         parameters: {
             query?: never;
@@ -111,6 +145,54 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["addPhoto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/sport-configurations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addSportConfiguration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/pricing-rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addPricingRule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/create-complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createCompleteLocation"];
         delete?: never;
         options?: never;
         head?: never;
@@ -216,6 +298,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a list of all upcoming public events */
+        get: operations["getAllUpcomingEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events/{eventId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get detailed information about a specific event */
+        get: operations["getEventDetails"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events/my-participations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all events the current client is participating in */
+        get: operations["getMyParticipations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/client-profile/": {
         parameters: {
             query?: never;
@@ -264,6 +397,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/business-profile/{businessAccountId}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllBusinessPhotos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/business-profile/locations": {
         parameters: {
             query?: never;
@@ -281,6 +430,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/register/business/{businessId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["unregisterBusiness"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/business-profiles/{businessAccountId}/locations/{locationId}/photos/{photoId}": {
         parameters: {
             query?: never;
@@ -292,6 +457,38 @@ export interface paths {
         put?: never;
         post?: never;
         delete: operations["deletePhoto"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/sport-configurations/{configId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deleteSportConfiguration"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/business-profiles/{businessAccountId}/locations/{locationId}/config/pricing-rules/{ruleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["deletePricingRule"];
         options?: never;
         head?: never;
         patch?: never;
@@ -344,6 +541,81 @@ export interface components {
             id?: number;
             name?: string;
         };
+        BookingRulesUpdateRequest: {
+            /** Format: int32 */
+            maxBookingAdvanceDays: number;
+            /** @enum {string} */
+            cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
+        };
+        BookingRulesInfoDTO: {
+            /** Format: int32 */
+            maxBookingAdvanceDays?: number;
+            /** @enum {string} */
+            cancellationPolicy: "FLEXIBLE" | "MODERATE" | "STRICT";
+        };
+        BusinessLocationsDTO: {
+            /** Format: int64 */
+            id: number;
+            businessName: string;
+            website?: string;
+            locations: components["schemas"]["LocationSummaryDTO"][];
+        };
+        LocationDetailDTO: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            address: string;
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+            business: components["schemas"]["BusinessLocationsDTO"];
+            photos: components["schemas"]["LocationPhotoDTO"][];
+            operatingHours: components["schemas"]["OperatingHourDTO"][];
+            facilities: components["schemas"]["FacilityDTO"][];
+            /** Format: int32 */
+            upcomingEventsCount: number;
+            pricingRules: components["schemas"]["PricingRuleDTO"][];
+            sportConfigurations: components["schemas"]["SportConfigurationDTO"][];
+            bookingRules: components["schemas"]["BookingRulesInfoDTO"];
+        };
+        LocationPhotoDTO: {
+            /** Format: int64 */
+            id?: number;
+            photoUrl: string;
+            description?: string;
+            isPrimary: boolean;
+        };
+        LocationSummaryDTO: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            address: string;
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+        };
+        PricingRuleDTO: {
+            /** Format: int64 */
+            id?: number;
+            ruleName: string;
+            daysOfWeek: string[];
+            startTime?: components["schemas"]["LocalTime"];
+            endTime?: components["schemas"]["LocalTime"];
+            pricePerHour: number;
+        };
+        SportConfigurationDTO: {
+            /** Format: int64 */
+            id?: number;
+            sportName: string;
+            surfaceType?: string;
+            recommendedCapacity?: string;
+            /** Format: int32 */
+            minBookingDuration: number;
+            /** Format: int32 */
+            bookingSlotIncrement: number;
+        };
         UpdateLogoRequest: {
             logoUrl: string;
         };
@@ -392,12 +664,19 @@ export interface components {
             url: string;
             description?: string;
         };
-        LocationPhotoDTO: {
-            /** Format: int64 */
-            id: number;
-            photoUrl: string;
-            description?: string;
-            isPrimary: boolean;
+        CreateCompleteLocationRequestDTO: {
+            name: string;
+            address: string;
+            /** Format: double */
+            latitude?: number;
+            /** Format: double */
+            longitude?: number;
+            photos?: components["schemas"]["PhotoCreateRequest"][];
+            operatingHours?: components["schemas"]["OperatingHourDTO"][];
+            facilityIds?: number[];
+            pricingRules?: components["schemas"]["PricingRuleDTO"][];
+            sportConfigurations?: components["schemas"]["SportConfigurationDTO"][];
+            bookingRules?: components["schemas"]["BookingRulesUpdateRequest"];
         };
         BusinessPhotoDTO: {
             /** Format: int64 */
@@ -434,36 +713,70 @@ export interface components {
             phoneNumber?: string;
             email?: string;
         };
-        LocationSummaryDTO: {
+        EventSummaryDTO: {
             /** Format: int64 */
-            id: number;
-            name: string;
-            address: string;
-            /** Format: double */
-            latitude?: number;
-            /** Format: double */
-            longitude?: number;
-        };
-        BusinessLocationsDTO: {
-            businessName: string;
-            website?: string;
-            locations: components["schemas"]["LocationSummaryDTO"][];
-        };
-        LocationDetailDTO: {
-            /** Format: int64 */
-            id: number;
-            name: string;
-            address: string;
-            /** Format: double */
-            latitude?: number;
-            /** Format: double */
-            longitude?: number;
-            business: components["schemas"]["BusinessLocationsDTO"];
-            photos: components["schemas"]["LocationPhotoDTO"][];
-            operatingHours: components["schemas"]["OperatingHourDTO"][];
-            facilities: components["schemas"]["FacilityDTO"][];
+            id?: number;
+            title: string;
+            sport: string;
+            /** Format: date-time */
+            eventDateTime: string;
+            /** @enum {string} */
+            type: "PUBLIC" | "PRIVATE";
+            /** @enum {string} */
+            status: "PENDING_APPROVAL" | "PLANNED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+            location: components["schemas"]["LocationSummaryDTO"];
             /** Format: int32 */
-            upcomingEventsCount: number;
+            participantsCount: number;
+        };
+        ClientDTO: {
+            /** Format: int64 */
+            id?: number;
+            username: string;
+        };
+        EventDetailDTO: {
+            /** Format: int64 */
+            id?: number;
+            title: string;
+            sport: string;
+            /** Format: date-time */
+            eventDateTime: string;
+            /** @enum {string} */
+            type: "PUBLIC" | "PRIVATE";
+            /** @enum {string} */
+            status: "PENDING_APPROVAL" | "PLANNED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+            creator: components["schemas"]["ClientDTO"];
+            location: components["schemas"]["LocationEventsDTO"];
+            details?: components["schemas"]["EventDetailsDTO"];
+            photos: components["schemas"]["EventPhotoDTO"][];
+            participations: components["schemas"]["EventParticipationDTO"][];
+            /** Format: int32 */
+            participantsCount: number;
+        };
+        EventDetailsDTO: {
+            description?: string;
+            /** Format: int32 */
+            maxParticipants?: number;
+            costPerPerson: number;
+            /** @enum {string} */
+            skillLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "ALL_LEVELS";
+        };
+        EventParticipationDTO: {
+            client: components["schemas"]["ClientDTO"];
+            /** Format: date-time */
+            joinDateTime: string;
+        };
+        EventPhotoDTO: {
+            /** Format: int64 */
+            id?: number;
+            photoUrl: string;
+            caption?: string;
+        };
+        LocationEventsDTO: {
+            /** Format: int64 */
+            id?: number;
+            name: string;
+            address: string;
+            events: components["schemas"]["EventSummaryDTO"][];
         };
         ClientProfileDTO: {
             /** Format: int64 */
@@ -542,6 +855,33 @@ export interface operations {
             };
         };
     };
+    updateBookingRules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BookingRulesUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationDetailDTO"];
+                };
+            };
+        };
+    };
     updateBusinessLogo: {
         parameters: {
             query?: never;
@@ -607,6 +947,54 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    joinEvent: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-User-Id": number;
+            };
+            path: {
+                eventId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
+            };
+        };
+    };
+    leaveEvent: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-User-Id": number;
+            };
+            path: {
+                eventId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Unit"];
+                };
             };
         };
     };
@@ -681,6 +1069,86 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["LocationPhotoDTO"];
+                };
+            };
+        };
+    };
+    addSportConfiguration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SportConfigurationDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SportConfigurationDTO"];
+                };
+            };
+        };
+    };
+    addPricingRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PricingRuleDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PricingRuleDTO"];
+                };
+            };
+        };
+    };
+    createCompleteLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCompleteLocationRequestDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationDetailDTO"];
                 };
             };
         };
@@ -890,6 +1358,70 @@ export interface operations {
             };
         };
     };
+    getAllUpcomingEvents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventSummaryDTO"][];
+                };
+            };
+        };
+    };
+    getEventDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventDetailDTO"];
+                };
+            };
+        };
+    };
+    getMyParticipations: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-User-Id": number;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventSummaryDTO"][];
+                };
+            };
+        };
+    };
     getCurrentUserProfile: {
         parameters: {
             query?: never;
@@ -954,6 +1486,28 @@ export interface operations {
             };
         };
     };
+    getAllBusinessPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationPhotoDTO"][];
+                };
+            };
+        };
+    };
     getMyBusinessLocations: {
         parameters: {
             query?: never;
@@ -974,6 +1528,26 @@ export interface operations {
             };
         };
     };
+    unregisterBusiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     deletePhoto: {
         parameters: {
             query?: never;
@@ -982,6 +1556,50 @@ export interface operations {
                 businessAccountId: number;
                 locationId: number;
                 photoId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteSportConfiguration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+                configId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deletePricingRule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessAccountId: number;
+                locationId: number;
+                ruleId: number;
             };
             cookie?: never;
         };
