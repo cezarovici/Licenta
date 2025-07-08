@@ -1,5 +1,6 @@
 package com.cezar.core.application.dto.location
 
+import com.cezar.core.application.dto.shared.FacilityDTO
 import java.time.LocalTime
 
 /**
@@ -51,5 +52,5 @@ data class UpdateOperatingHoursRequest(
  * DTO pentru a trimite noul set de ID-uri de facilități (strategia "clear and replace").
  */
 data class UpdateFacilitiesRequest(
-    val facilityIds: Set<Long>
+    val facilityIds: Set<FacilityDTO>
 )

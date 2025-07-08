@@ -1,29 +1,33 @@
 import { Spinner, Alert } from "flowbite-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ProfileHeader from "../profile/business/ProfileHeader";
-import type { LocationDetails } from "../../types/api";
-import LocationPhotoGallery from "../../features/location-management/components/LocationPhotoGalery";
-import LocationCustomizationForm from "../../features/location-management/components/pages/LocationCustomizationPage";
-import { useLocations } from "../../features/location-management/hooks/useLocation";
+import ProfileHeader from "../../../../components/profile/business/ProfileHeader";
+import LocationPhotoGallery from "../LocationPhotoGalery";
+import LocationCustomizationForm from "./LocationCustomizationPage";
+import { useLocations } from "../../hooks/useLocation";
+import type { LocationDetails } from "../../../../types/api";
 
 const queryClient = new QueryClient();
 
-export default function LocationProfilePage({
+export default function LocationViewPage({
   locationId,
+  businessId,
 }: {
-  locationId: number | undefined;
+  locationId: number;
+  businessId: number;
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <LocationProfilePageRaw locationId={locationId} />
+      <LocationProfilePageRaw locationId={locationId} businessId={businessId} />
     </QueryClientProvider>
   );
 }
 
 function LocationProfilePageRaw({
   locationId,
+  businessId,
 }: {
-  locationId: number | undefined;
+  locationId: number;
+  businessId: number;
 }) {
   const {
     locationDetails,
@@ -36,7 +40,9 @@ function LocationProfilePageRaw({
     addPricingRule,
     addSportConfiguration,
     updateBookingRules,
-  } = useLocations(undefined, locationId);
+  } = useLocations(businessId, locationId);
+
+  console.log(locationDetails, locationId, businessId);
 
   if (isLoading) {
     return (
@@ -79,9 +85,7 @@ function LocationProfilePageRaw({
         path: { locationId: locationId!, businessAccountId: businessId },
       },
       body: {
-        facilityIds: updatedData.facilities
-          .map((f) => f.id!)
-          .filter((id) => id !== undefined),
+        facilityIds: updatedData.facilities.filter((id) => id !== undefined),
       },
     });
 
@@ -107,7 +111,6 @@ function LocationProfilePageRaw({
       }
     });
 
-    // 6. Actualizare reguli de rezervare
     updateBookingRules({
       params: {
         path: { locationId: locationId!, businessAccountId: businessId },
@@ -140,9 +143,8 @@ function LocationProfilePageRaw({
 
       <div className="mt-8">
         <LocationCustomizationForm
-          location={locationDetails}
-          onSave={handleSaveChanges}
-          isSaving={isProcessing}
+          locationId={locationId}
+          businessId={businessId}
         />
       </div>
     </div>

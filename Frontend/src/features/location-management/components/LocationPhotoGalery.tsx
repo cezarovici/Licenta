@@ -52,7 +52,7 @@ export default function LocationPhotoGallery({ location }: Props) {
         description: description || undefined,
       };
 
-      await addPhoto(
+      addPhoto(
         {
           params: {
             path: {

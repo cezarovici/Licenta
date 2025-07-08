@@ -13,15 +13,12 @@ open class Facility(
     @Column(nullable = false, unique = true)
     var name: String,
 
-    @Column
-    var iconUrl: String? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     var location: LocationEntity? = null
 ){
     fun toDTO(): FacilityDTO = FacilityDTO(
-        id = this.id,
+        id = this.id!!,
         name = this.name
     )
 }

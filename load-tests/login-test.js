@@ -2,15 +2,24 @@ import http from "k6/http";
 import { check } from "k6";
 
 export const options = {
-  stages: [
-    { duration: "1m", target: 20 },
-    { duration: "2m", target: 50 },
-    { duration: "1m", target: 0 },
-  ],
+  scenarios: {
+    stress: {
+      executor: "ramping-vus",
+      stages: [
+        { duration: "2m", target: 100 },
+        { duration: "3m", target: 100 },
+        { duration: "2m", target: 200 },
+        { duration: "3m", target: 200 },
+        { duration: "2m", target: 300 },
+        { duration: "3m", target: 300 },
+        { duration: "1m", target: 0 },
+      ],
+    },
+  },
 };
 
 export default function () {
-  const url = "http://api-gateway:8080/idm/auth/login";
+  const url = "lb://apigateway:8080/idm/auth/login";
   const payload = JSON.stringify({
     username: "njroffic@gmail.com",
     password: "Cezarone2002.",

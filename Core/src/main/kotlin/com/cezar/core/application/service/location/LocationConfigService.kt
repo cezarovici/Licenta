@@ -17,6 +17,31 @@ class LocationConfigService(
     private val facilityRepository: FacilityRepository,
     private val locationService: LocationService
 ) {
+
+    @Transactional
+    fun getOperatingHours(businessAccountId: Long, locationId: Long) : Set<OperatingHourDTO>{
+        val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
+        return location.operatingHours.map { it.toDTO() }.toSet()
+    }
+
+    @Transactional
+    fun getSportConfiguration(businessAccountId: Long, locationId: Long) : Set<SportConfigurationDTO>{
+        val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
+        return location.sportConfigurations.map { it.toDTO() }.toSet()
+    }
+
+    @Transactional
+    fun getFacilities(businessAccountId: Long, locationId: Long) : Set<FacilityDTO>{
+        val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
+        return location.facilities.map { it.toDTO() }.toSet()
+    }
+
+    @Transactional
+    fun getPrincingRule(businessAccountId: Long, locationId: Long) : Set<PricingRuleDTO>{
+        val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
+        return location.pricingRules.map { it.toDTO() }.toSet()
+    }
+
     // CREATE
     @Transactional
     fun addSportConfiguration(businessAccountId: Long, locationId: Long, dto: SportConfigurationDTO): SportConfigurationDTO {
@@ -36,9 +61,18 @@ class LocationConfigService(
         return savedRule.toDTO()
     }
 
+    @Transactional
+    fun addFacility(businessAccountId: Long, locationId: Long, dto: FacilityDTO): FacilityDTO {
+        val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
+        val newFacility = Facility(dto.id, dto.name)
+
+        location.facilities.add(newFacility)
+        val savedFacility = locationRepository.save(location).facilities.last()
+
+        return savedFacility.toDTO()
+    }
+
     // UPDATE
-
-
     @Transactional
     fun updateOperatingHours(businessAccountId: Long, locationId: Long, request: UpdateOperatingHoursRequest): Set<OperatingHourDTO> {
         val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
@@ -53,13 +87,20 @@ class LocationConfigService(
     @Transactional
     fun updateFacilities(businessAccountId: Long, locationId: Long, request: UpdateFacilitiesRequest): Set<FacilityDTO> {
         val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)
-        location.facilities = facilityRepository.findAllById(request.facilityIds).toMutableSet()
+
+
+        val newFacilitiesSet = facilityRepository.findAllByLocationId(locationId).toMutableSet()
+
+        location.facilities = newFacilitiesSet
         location.updatedAt = LocalDateTime.now()
-        return locationRepository.save(location).facilities.map { it.toDTO() }.toSet()
+
+        val savedLocation = locationRepository.save(location)
+
+        return savedLocation.facilities.map { it.toDTO() }.toSet()
     }
 
-    // DELETE
 
+    // DELETE
     @Transactional
     fun deletePricingRule(businessAccountId: Long, locationId: Long, ruleId: Long) {
         val location = locationService.findLocationForBusinessOrThrow(locationId, businessAccountId)

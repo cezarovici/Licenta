@@ -4,7 +4,11 @@ import ClientProfileCard from "./client/ClientProfileCard";
 import ProfilePlaceholder from "./ProfilePlaceholder";
 
 export default function ProfileManager() {
-  const { userType, loading, error } = useUserType();
+  const {
+    userType,
+    isLoadingUserType: loading,
+    errorLoadingUserType: error,
+  } = useUserType();
 
   if (loading) {
     return <ProfilePlaceholder loading={true} error="" />;
@@ -24,8 +28,12 @@ export default function ProfileManager() {
 
   return (
     <div className="w-full">
-      {userType === "CLIENT" && <ClientProfileCard />}
-      {userType === "BUSINESS" && <BusinessProfilePage />}
+      {userType.name === "CLIENT" && (
+        <ClientProfileCard accountId={userType.accountId} />
+      )}
+      {userType.name === "BUSINESS" && (
+        <BusinessProfilePage accountId={userType.accountId} />
+      )}
     </div>
   );
 }

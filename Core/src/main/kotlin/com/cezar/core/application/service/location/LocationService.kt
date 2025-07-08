@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
+import java.util.*
 
 @Service
 class LocationService(
@@ -142,8 +143,14 @@ class LocationService(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Business with account ID $businessAccountId not found.")
     }
 
-    internal fun findLocationForBusinessOrThrow(locationId: Long, businessAccountId: Long): LocationEntity {
-        return locationRepository.findByIdAndBusinessAccountId(locationId, businessAccountId)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Location with ID $locationId not found for business with account ID $businessAccountId.")
+    fun findLocationForBusinessOrThrow(locationId: Long, businessAccountId: Long): LocationEntity {
+        val location = locationRepository.findById(locationId)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Location with ID $locationId not found.") }
+
+        if (location.business.accountId != businessAccountId) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Location does not belong to the business account.")
+        }
+
+        return location
     }
 }

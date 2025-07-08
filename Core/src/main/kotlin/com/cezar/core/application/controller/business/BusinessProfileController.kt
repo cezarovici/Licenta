@@ -22,36 +22,12 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/business-profile")
 @Tag(name = "Business Profile Management API", description = "Endpoints for the authenticated business owner to manage their profile")
 class BusinessProfileController(
-    private val businessProfileService: BusinessProfileService, // Service pentru Comenzi (scriere)
-    private val businessQueryService: BusinessQueryService,   // Service pentru Interogări (citire)
+    private val businessProfileService: BusinessProfileService,
+    private val businessQueryService: BusinessQueryService,
     private val storageClient: StorageClient,
     private val locationManagementService: LocationPhotoService
 ) {
     private val logger = LoggerFactory.getLogger(BusinessProfileController::class.java)
-
-    // --- QUERY ENDPOINTS (folosesc BusinessQueryService) ---
-
-    @GetMapping("/{businessAccountId}/photos")
-    fun getAllBusinessPhotos(@PathVariable businessAccountId: Long): ResponseEntity<List<LocationPhotoDTO>> {
-        val photos = locationManagementService.getAllPhotosForBusiness(businessAccountId)
-        return ResponseEntity.ok(photos)
-    }
-
-    @GetMapping
-    @Operation(summary = "Get current business profile details")
-    fun getCurrentBusinessProfile(): ResponseEntity<BusinessDTO> {
-        val accountId = getCurrentAccountId()
-        val profileDto = businessQueryService.getBusinessDetails(accountId)
-        return ResponseEntity.ok(profileDto)
-    }
-
-    @GetMapping("/locations")
-    @Operation(summary = "Get all locations for the current business")
-    fun getMyBusinessLocations(): ResponseEntity<BusinessLocationsDTO> {
-        val accountId = getCurrentAccountId()
-        val locationsDto = businessQueryService.getBusinessLocations(accountId)
-        return ResponseEntity.ok(locationsDto)
-    }
 
     // --- COMMAND ENDPOINTS (folosesc BusinessProfileService) ---
 

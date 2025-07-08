@@ -25,4 +25,7 @@ class LocationQueryService(
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with ID: $locationId") }
         return location.toDetailDTO()
     }
+
+
+
 }

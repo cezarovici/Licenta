@@ -9,7 +9,11 @@ import { useLocations } from "../location-management/hooks/useLocation";
 import BusinessPhotosList from "./components/BusinessPhotoList";
 import BusinessLocationsList from "../location-management/components/BusinessLocationsList";
 
-export default function BusinessProfilePage() {
+export default function BusinessProfilePage({
+  accountId,
+}: {
+  accountId: number;
+}) {
   const {
     profile,
     allBusinessPhotos,
@@ -17,9 +21,8 @@ export default function BusinessProfilePage() {
     isSubmitting: isProfileSubmitting,
     statusMessage: profileStatus,
     updateProfile,
-  } = useBusinessProfile();
+  } = useBusinessProfile(accountId);
 
-  console.log(allBusinessPhotos);
   const { statusMessage: locationStatus, isProcessing: isLocationProcessing } =
     useLocations();
 
@@ -62,12 +65,8 @@ export default function BusinessProfilePage() {
       <StatusAlert statusMessage={statusMessage} className="mb-6" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
-          <BusinessProfileDisplay
-            profile={profile}
-            isSubmitting={isSubmitting}
-            onUpdateProfile={updateProfile}
-          />
-          <BusinessPhotosList />
+          <BusinessProfileDisplay accountId={accountId} />
+          <BusinessPhotosList accountId={accountId} />
         </div>
         <div className="md:col-span-1 space-y-8">
           <BusinessLocationsList businessId={profile.id} />

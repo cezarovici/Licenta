@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { api } from "../../../types/api/fetch";
+import { useUserType } from "../../../hooks/useUserType";
 
 type StatusMessage = {
   type: "success" | "error";
@@ -20,9 +21,6 @@ export const useLocations = (
   const queryClient = useQueryClient();
   const [statusMessage, setStatusMessage] = useState<StatusMessage>(null);
 
-  // =================================================================
-  //  1. CHEI DE QUERY (QUERY KEYS) - Sursa unică de adevăr pentru cache
-  // =================================================================
   const queryKeys = useMemo(
     () => ({
       all: ["get", "/api/locations"] as QueryKey,
@@ -48,18 +46,61 @@ export const useLocations = (
 
   const { data: locationDetails, isLoading: isDetailsLoading } = api.useQuery(
     "get",
-    "/api/locations/{id}",
+    "/api/locations/{locationId}",
     {
-      params: { path: { id: locationId! } },
-      enabled: !!locationId, // Se execută doar dacă `locationId` este valid
+      params: { path: { locationId: locationId! } },
+      enabled: !!locationId,
     }
   );
+
+  const { data: operatingHours, isLoading: isLoadingOperatingHours } =
+    api.useQuery(
+      "get",
+      "/api/locations/{locationId}/business/{businessId}/operating-hours",
+      {
+        params: {
+          path: {
+            locationId: locationId!,
+            businessId: businessAccountId!,
+          },
+        },
+        enabled: !!locationId && !!businessAccountId,
+      }
+    );
+
+  const { data: facilities, isLoading: isLoadingFacilities } = api.useQuery(
+    "get",
+    "/api/locations/{locationId}/business/{businessId}/facilities",
+    {
+      params: {
+        path: {
+          locationId: locationId!,
+          businessId: businessAccountId!,
+        },
+      },
+      enabled: !!locationId && !!businessAccountId,
+    }
+  );
+
+  const { data: sportConfiguration, isLoading: isLoadingSportConfiguration } =
+    api.useQuery(
+      "get",
+      "/api/locations/{locationId}/business/{businessId}/sport-configurations",
+      {
+        params: {
+          path: {
+            locationId: locationId!,
+            businessId: businessAccountId!,
+          },
+        },
+        enabled: !!locationId && !!businessAccountId,
+      }
+    );
 
   // =================================================================
   //  3. MUTATIONS - Modificarea datelor
   // =================================================================
 
-  // Funcție generică pentru a reduce repetiția
   const createMutationOptions = (
     successMessage: string,
     errorMessagePrefix: string
@@ -79,8 +120,6 @@ export const useLocations = (
     },
   });
 
-  // --- Mutații pentru fiecare endpoint de locație ---
-
   const { mutate: createLocation, isPending: isCreating } = api.useMutation(
     "post",
     "/api/business-profiles/{businessAccountId}/locations",
@@ -94,8 +133,7 @@ export const useLocations = (
       "Eroare la actualizarea detaliilor"
     )
   );
-  // const { mutate: deleteLocation, isPending: isDeleting } =
-  //   api.useMutation(/* ... */);
+
   const { mutate: updateOperatingHours, isPending: isUpdatingHours } =
     api.useMutation(
       "put",
@@ -132,7 +170,16 @@ export const useLocations = (
     )
   );
 
-  // --- MUTAȚII NOI ADĂUGATE ---
+  const { mutate: deleteLocation, isPending: isDeletingLocation } =
+    api.useMutation(
+      "delete",
+      "/api/business-profiles/{businessAccountId}/locations/{locationId}",
+      createMutationOptions(
+        "Locație ștearsă cu succes",
+        "Eroare la stergerea unei locații"
+      )
+    );
+
   const { mutate: addPricingRule, isPending: isAddingPricingRule } =
     api.useMutation(
       "post",
@@ -182,12 +229,13 @@ export const useLocations = (
         "Eroare la actualizarea regulilor"
       )
     );
-  // =================================================================
-  //  4. FAȚADA - Valoarea returnată expusă componentelor
-  // =================================================================
+
   return {
     allLocations: locations || [],
     locationDetails,
+    operatingHours,
+    facilities,
+    sportConfiguration,
     isLoading: areLocationsLoading || isDetailsLoading,
     isProcessing:
       isCreating ||
@@ -200,7 +248,11 @@ export const useLocations = (
       isDeletingPricingRule ||
       isAddingSportConfig ||
       isDeletingSportConfig ||
-      isUpdatingBookingRules,
+      isDeletingLocation ||
+      isLoadingOperatingHours ||
+      isUpdatingBookingRules ||
+      isLoadingFacilities ||
+      isLoadingSportConfiguration,
     statusMessage,
     setStatusMessage,
 
@@ -211,7 +263,7 @@ export const useLocations = (
     updateFacilities,
     addPhoto,
     deletePhoto,
-    // --- ACȚIUNI NOI EXPUSE ---
+    deleteLocation,
     addPricingRule,
     deletePricingRule,
     addSportConfiguration,

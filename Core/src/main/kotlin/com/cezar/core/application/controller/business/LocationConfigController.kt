@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/business-profiles/{businessAccountId}/locations/{locationId}/config")
 @AuthorizeBusinessOwner
 class LocationConfigController(private val locationManagementService: LocationConfigService) {
-
     // --- Program ---
     @PutMapping("/operating-hours")
     fun updateOperatingHours(

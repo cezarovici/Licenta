@@ -9,12 +9,8 @@ class UserTypeController(
     private val userTypeRetrievalService: UserTypeRetrievalService
 ) {
     @GetMapping("/")
-    fun getMyUserType(@RequestHeader("X-User-Id") accountId: Long): ResponseEntity<Map<String, String>> {
+    fun getMyUserType(@RequestHeader("X-User-Id") accountId: Long): ResponseEntity<UserTypeDTO> {
         val userType = userTypeRetrievalService.getUserType(accountId)
-        return if (userType != null) {
-            ResponseEntity.ok(mapOf("userType" to userType))
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(userType)
     }
 }

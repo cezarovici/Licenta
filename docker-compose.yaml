@@ -12,6 +12,8 @@
       build:
         context: ./ApiGateway
         dockerfile: ./Dockerfile
+      deploy:
+        replicas: 1
       ports:
         - "8080:8080" 
       depends_on:
@@ -60,7 +62,7 @@
         context: ./AuthServer
         dockerfile: ./Dockerfile
       deploy:
-        replicas: 1
+        replicas: 5
       depends_on:
         - service-discovery-server
         - auth-server-db
@@ -156,6 +158,15 @@
       restart: unless-stopped
       networks:
         - app-network
+    k6:
+      image: grafana/k6
+      volumes:
+        - ./load-tests:/scripts
+      working_dir: /scripts
+      entrypoint: ["k6", "run", "login-test.js"]
+      networks:
+        - app-network
+
   volumes:
     db-data:
 

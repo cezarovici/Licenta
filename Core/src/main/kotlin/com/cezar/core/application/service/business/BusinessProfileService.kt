@@ -35,6 +35,7 @@ class BusinessProfileService(private val businessRepository: BusinessRepository)
                 request.websiteUrl?.let { business.details?.websiteUrl = it }
                 request.phoneNumber?.let { business.details?.phoneNumber = it }
                 request.email?.let { business.details?.email = it }
+                request.logoUrl?.let{business.logoUrl = it}
 
                 val savedBusiness = businessRepository.save(business)
                 return savedBusiness.toDetailDTO()

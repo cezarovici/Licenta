@@ -11,7 +11,7 @@ type StatusMessage = {
   message: string;
 } | null;
 
-export const useBusinessProfile = () => {
+export const useBusinessProfile = (businessId: number) => {
   const queryClient = useQueryClient();
   const [statusMessage, setStatusMessage] = useState<StatusMessage>(null);
 
@@ -20,7 +20,11 @@ export const useBusinessProfile = () => {
     data: profile,
     isLoading: isProfileLoading,
     refetch: refreshProfile,
-  } = api.useQuery("get", "/api/business-profile");
+  } = api.useQuery("get", "/api/businesses/{businessId}", {
+    params: {
+      path: { businessId: businessId },
+    },
+  });
 
   const invalidateAndRefresh = () => {
     queryClient.invalidateQueries({ queryKey });
@@ -49,10 +53,10 @@ export const useBusinessProfile = () => {
 
   const { data: allBusinessPhotos } = api.useQuery(
     "get",
-    "/api/business-profile/{businessAccountId}/photos",
+    "/api/businesses/{businessAccountId}/photos",
     {
-      params: { path: { businessAccountId: profile?.id! } },
-      enabled: !!profile?.id,
+      params: { path: { businessAccountId: businessId! } },
+      enabled: businessId,
     }
   );
 

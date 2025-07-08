@@ -1,9 +1,12 @@
 import { useBusinessProfile } from "../hooks/useBusinessProfile";
 import { PhotoItem } from "./PhotoItem";
 
-export default function BusinessPhotosList() {
-  const { allBusinessPhotos: photos, deletePhoto: onPhotoDeleted } =
-    useBusinessProfile();
+export default function BusinessPhotosList({
+  accountId,
+}: {
+  accountId: number;
+}) {
+  const { allBusinessPhotos: photos } = useBusinessProfile(accountId);
 
   if (!photos || photos.length === 0) {
     return (

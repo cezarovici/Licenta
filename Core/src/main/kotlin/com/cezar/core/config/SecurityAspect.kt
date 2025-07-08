@@ -12,7 +12,6 @@ import org.springframework.web.servlet.HandlerMapping
 @Aspect
 @Component
 class SecurityAspect(private val request: HttpServletRequest) {
-
     companion object {
         private val logger = LoggerFactory.getLogger(SecurityAspect::class.java)
     }

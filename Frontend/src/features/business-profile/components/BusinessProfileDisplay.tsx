@@ -1,23 +1,31 @@
 import { useState, useEffect } from "react";
-import { Button, Label, TextInput, Spinner, Textarea } from "flowbite-react";
+import {
+  Button,
+  Label,
+  TextInput,
+  Spinner,
+  Textarea,
+  FileInput,
+} from "flowbite-react";
 import { HiPencil, HiCheck, HiX } from "react-icons/hi";
-import type {
-  BusinessProfile,
-  BusinessUpdatePayload,
-} from "../../../types/api";
-
-interface BusinessProfileDisplayProps {
-  profile: BusinessProfile;
-  isSubmitting: boolean;
-  onUpdateProfile: (updatedData: BusinessUpdatePayload) => void;
-}
+import type { BusinessUpdatePayload } from "../../../types/api";
+import { uploadFileToObjectStorage } from "../../../lib/objectStorage/objectStorageApi";
+import { useBusinessProfile } from "../hooks/useBusinessProfile";
 
 export default function BusinessProfileDisplay({
-  profile,
-  isSubmitting,
-  onUpdateProfile,
-}: BusinessProfileDisplayProps) {
+  accountId,
+}: {
+  accountId: number;
+}) {
+  const {
+    profile: profile2,
+    updateProfile,
+    isSubmitting,
+  } = useBusinessProfile(accountId);
+  const profile = profile2!;
+
   const [isEditing, setIsEditing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [formData, setFormData] = useState<BusinessUpdatePayload>({
     name: profile.name,
@@ -28,6 +36,13 @@ export default function BusinessProfileDisplay({
     email: profile.email,
   });
 
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(
+    profile.logoUrl || null
+  );
+
+  console.log("Profilul de business:", profile);
+
   useEffect(() => {
     setFormData({
       name: profile.name,
@@ -37,6 +52,8 @@ export default function BusinessProfileDisplay({
       phoneNumber: profile.phoneNumber,
       email: profile.email,
     });
+    setLogoPreview(profile.logoUrl || null);
+    setLogoFile(null);
   }, [profile]);
 
   const handleChange = (
@@ -46,8 +63,35 @@ export default function BusinessProfileDisplay({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    onUpdateProfile(formData);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setLogoFile(file);
+      setLogoPreview(URL.createObjectURL(file));
+      setFormData((prev) => ({ ...prev, logoUrl: "" }));
+    }
+  };
+
+  const handleSave = async () => {
+    let dataToSave = { ...formData };
+    console.log("Date de salvat:", dataToSave);
+
+    if (logoFile) {
+      setIsUploading(true);
+      try {
+        const newLogoUrl = await uploadFileToObjectStorage(logoFile);
+        dataToSave.logoUrl = newLogoUrl.data.url;
+        console.log("Logo URL actualizat:", dataToSave.logoUrl);
+      } catch (error) {
+        console.error("Eroare la încărcarea logo-ului:", error);
+        setIsUploading(false);
+        return;
+      } finally {
+        setIsUploading(false);
+      }
+    }
+
+    updateProfile(dataToSave);
     setIsEditing(false);
   };
 
@@ -60,6 +104,8 @@ export default function BusinessProfileDisplay({
       phoneNumber: profile.phoneNumber,
       email: profile.email,
     });
+    setLogoFile(null);
+    setLogoPreview(profile.logoUrl || null);
     setIsEditing(false);
   };
 
@@ -74,6 +120,8 @@ export default function BusinessProfileDisplay({
     );
   };
 
+  const isBusy = isUploading || isSubmitting;
+
   return (
     <div className="p-6 bg-section border border-standard rounded-lg">
       <div className="flex justify-between items-center mb-6">
@@ -85,21 +133,23 @@ export default function BusinessProfileDisplay({
             <>
               <Button
                 onClick={handleSave}
-                disabled={isSubmitting}
+                disabled={isBusy}
                 color="success"
                 size="sm"
               >
-                {isSubmitting ? (
+                {isBusy ? (
                   <Spinner size="sm" />
                 ) : (
                   <HiCheck className="h-5 w-5" />
                 )}
-                <span className="ml-2 hidden sm:inline">Salvează</span>
+                <span className="ml-2 hidden sm:inline">
+                  {isUploading ? "Se încarcă logo..." : "Salvează"}
+                </span>
               </Button>
               <Button
                 onClick={handleCancel}
                 color="gray"
-                disabled={isSubmitting}
+                disabled={isBusy}
                 size="sm"
               >
                 <HiX className="h-5 w-5" />
@@ -131,6 +181,7 @@ export default function BusinessProfileDisplay({
                 name="name"
                 value={formData.name || ""}
                 onChange={handleChange}
+                disabled={isBusy}
               />
             ) : (
               renderField(profile.name, "Numele afacerii")
@@ -150,6 +201,7 @@ export default function BusinessProfileDisplay({
                 value={formData.websiteUrl || ""}
                 onChange={handleChange}
                 placeholder="https://..."
+                disabled={isBusy}
               />
             ) : (
               renderField(profile.websiteUrl, "Nu a fost adăugat")
@@ -174,6 +226,7 @@ export default function BusinessProfileDisplay({
                 value={formData.email || ""}
                 onChange={handleChange}
                 placeholder="contact@business.com"
+                disabled={isBusy}
               />
             ) : (
               renderField(profile.email, "Nu a fost adăugat")
@@ -193,6 +246,7 @@ export default function BusinessProfileDisplay({
                 value={formData.phoneNumber || ""}
                 onChange={handleChange}
                 placeholder="07XX XXX XXX"
+                disabled={isBusy}
               />
             ) : (
               renderField(profile.phoneNumber, "Nu a fost adăugat")
@@ -216,28 +270,38 @@ export default function BusinessProfileDisplay({
               onChange={handleChange}
               rows={4}
               placeholder="O scurtă descriere a afacerii tale..."
+              disabled={isBusy}
             />
           ) : (
             renderField(profile.description, "Nu a fost adăugată o descriere.")
           )}
         </div>
 
-        {/* Logo URL */}
+        {/* Logo */}
         <div>
           <Label
-            htmlFor="logoUrl"
+            htmlFor="logo"
             className="text-primary mb-2 block font-semibold"
           >
-            URL Logo
+            Logo
           </Label>
           {isEditing ? (
-            <TextInput
-              id="logoUrl"
-              name="logoUrl"
-              value={formData.logoUrl || ""}
-              onChange={handleChange}
-              placeholder="https://.../logo.png"
-            />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              {logoPreview && (
+                <img
+                  src={logoPreview}
+                  alt="Previzualizare Logo"
+                  className="h-24 w-24 rounded-md bg-white p-1 object-contain border"
+                />
+              )}
+              <FileInput
+                id="logo"
+                name="logo"
+                onChange={handleFileChange}
+                disabled={isBusy}
+                className="flex-grow"
+              />
+            </div>
           ) : profile.logoUrl ? (
             <img
               src={profile.logoUrl}
@@ -245,7 +309,7 @@ export default function BusinessProfileDisplay({
               className="max-w-24 h-auto rounded-md bg-white p-1"
             />
           ) : (
-            <p className="text-gray-400 italic">Nu a fost adăugat un logo.</p>
+            renderField(null, "Nu a fost adăugat un logo.")
           )}
         </div>
       </div>

@@ -31,23 +31,6 @@ class BusinessLocationController(private val locationManagementService: Location
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
-    @GetMapping
-    fun getAllLocationsForBusiness(
-        @PathVariable businessAccountId: Long
-    ): ResponseEntity<List<LocationResponse>> {
-        val response = locationManagementService.getAllLocationsForBusiness(businessAccountId)
-        return ResponseEntity.ok(response)
-    }
-
-    @GetMapping("/{locationId}")
-    fun getLocationById(
-        @PathVariable businessAccountId: Long,
-        @PathVariable locationId: Long
-    ): ResponseEntity<LocationDetailDTO> {
-        val response = locationManagementService.getLocationByIdForBusiness(businessAccountId, locationId)
-        return ResponseEntity.ok(response)
-    }
-
     @PatchMapping("/{locationId}")
     fun updateLocationDetails(
         @PathVariable businessAccountId: Long,

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class UserTypeRetrievalService(
     private val userTypeRepository: UserTypeRepository
 ) {
-    fun getUserType(accountId: Long): String? {
-        return userTypeRepository.findByAccountId(accountId)?.userType
+    fun getUserType(accountId: Long): UserTypeDTO {
+        return userTypeRepository.findByAccountId(accountId).toDTO()
     }
 }

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ClientRepository : JpaRepository<ClientEntity, Long> {
     fun findByAccountId(accountId: Long): ClientEntity?
+    fun existsByAccountId(accountId: Long): Boolean
+    fun deleteByAccountId(accountId: Long)
 }

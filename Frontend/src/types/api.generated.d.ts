@@ -126,7 +126,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllLocationsForBusiness"];
+        get?: never;
         put?: never;
         post: operations["createLocation"];
         delete?: never;
@@ -216,6 +216,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/client-profile/{clientId}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getCurrentUserProfile"];
+        put?: never;
+        post?: never;
+        delete: operations["deleteCurrentUserProfile"];
+        options?: never;
+        head?: never;
+        patch: operations["updateCurrentUserProfile"];
+        trace?: never;
+    };
     "/api/business-profiles/{businessAccountId}/locations/{locationId}": {
         parameters: {
             query?: never;
@@ -223,7 +239,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getLocationById"];
+        get?: never;
         put?: never;
         post?: never;
         delete: operations["deleteLocation"];
@@ -239,8 +255,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get current business profile details */
-        get: operations["getCurrentBusinessProfile"];
+        get?: never;
         put?: never;
         post?: never;
         delete?: never;
@@ -273,6 +288,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get a summary list of all available locations */
         get: operations["getAllLocations"];
         put?: never;
         post?: never;
@@ -282,14 +298,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/locations/{id}": {
+    "/api/locations/{locationId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /** Get detailed information for a specific location */
         get: operations["getLocationDetails"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/locations/{locationId}/business/{businessId}/sport-configurations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all sport configurations for a specific location */
+        get: operations["getSportConfigurations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/locations/{locationId}/business/{businessId}/operating-hours": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getOperatingHours"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/locations/{locationId}/business/{businessId}/facilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all facilities for a specific location */
+        get: operations["getFacilities"];
         put?: never;
         post?: never;
         delete?: never;
@@ -349,22 +416,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/client-profile/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getCurrentUserProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/businesses": {
         parameters: {
             query?: never;
@@ -372,6 +423,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get a summary list of all businesses */
         get: operations["searchBusinesses"];
         put?: never;
         post?: never;
@@ -381,13 +433,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/businesses/{id}": {
+    "/api/businesses/{businessId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        /** Get detailed information for a specific business by its ID */
         get: operations["getBusinessById"];
         put?: never;
         post?: never;
@@ -397,7 +450,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/business-profile/{businessAccountId}/photos": {
+    "/api/businesses/{businessId}/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all locations for a specific business */
+        get: operations["getAllLocationsForBusiness"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/businesses/{businessId}/locations/{locationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get details for a specific location belonging to a business */
+        get: operations["getLocationById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/businesses/{businessAccountId}/photos": {
         parameters: {
             query?: never;
             header?: never;
@@ -413,7 +500,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/business-profile/locations": {
+    "/api/businesses/locations": {
         parameters: {
             query?: never;
             header?: never;
@@ -533,13 +620,13 @@ export interface components {
         UpdateOperatingHoursRequest: {
             hours: components["schemas"]["OperatingHourDTO"][];
         };
-        UpdateFacilitiesRequest: {
-            facilityIds: number[];
-        };
         FacilityDTO: {
             /** Format: int64 */
-            id?: number;
-            name?: string;
+            id: number;
+            name: string;
+        };
+        UpdateFacilitiesRequest: {
+            facilityIds: components["schemas"]["FacilityDTO"][];
         };
         BookingRulesUpdateRequest: {
             /** Format: int32 */
@@ -685,6 +772,39 @@ export interface components {
             description?: string;
             isPrimary: boolean;
         };
+        ClientProfileUpdateRequestDTO: {
+            firstName?: string;
+            lastName?: string;
+            profilePhotoUrl?: string;
+            bio?: string;
+            favoriteSports?: string;
+        };
+        ClientProfileDTO: {
+            /** Format: int64 */
+            accountId: number;
+            firstName: string;
+            lastName: string;
+            profilePhotoUrl: string;
+            bio?: string;
+            favoriteSports?: string;
+            upcomingEvents: components["schemas"]["EventSummaryDTO"][];
+            pastEvents: components["schemas"]["EventSummaryDTO"][];
+        };
+        EventSummaryDTO: {
+            /** Format: int64 */
+            id?: number;
+            title: string;
+            sport: string;
+            /** Format: date-time */
+            eventDateTime: string;
+            /** @enum {string} */
+            type: "PUBLIC" | "PRIVATE";
+            /** @enum {string} */
+            status: "PENDING_APPROVAL" | "PLANNED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+            location: components["schemas"]["LocationSummaryDTO"];
+            /** Format: int32 */
+            participantsCount: number;
+        };
         LocationUpdateRequest: {
             name?: string;
             address?: string;
@@ -713,20 +833,10 @@ export interface components {
             phoneNumber?: string;
             email?: string;
         };
-        EventSummaryDTO: {
+        UserTypeDTO: {
             /** Format: int64 */
-            id?: number;
-            title: string;
-            sport: string;
-            /** Format: date-time */
-            eventDateTime: string;
-            /** @enum {string} */
-            type: "PUBLIC" | "PRIVATE";
-            /** @enum {string} */
-            status: "PENDING_APPROVAL" | "PLANNED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
-            location: components["schemas"]["LocationSummaryDTO"];
-            /** Format: int32 */
-            participantsCount: number;
+            accountId: number;
+            name: string;
         };
         ClientDTO: {
             /** Format: int64 */
@@ -777,14 +887,6 @@ export interface components {
             name: string;
             address: string;
             events: components["schemas"]["EventSummaryDTO"][];
-        };
-        ClientProfileDTO: {
-            /** Format: int64 */
-            accountId: number;
-            firstName: string;
-            lastName: string;
-            profilePhotoUrl: string;
-            bio?: string;
         };
         BusinessSummaryDTO: {
             /** Format: int64 */
@@ -998,28 +1100,6 @@ export interface operations {
             };
         };
     };
-    getAllLocationsForBusiness: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                businessAccountId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LocationResponse"][];
-                };
-            };
-        };
-    };
     createLocation: {
         parameters: {
             query?: never;
@@ -1177,13 +1257,12 @@ export interface operations {
             };
         };
     };
-    getLocationById: {
+    getCurrentUserProfile: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                businessAccountId: number;
-                locationId: number;
+                clientId: number;
             };
             cookie?: never;
         };
@@ -1195,7 +1274,53 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["LocationDetailDTO"];
+                    "*/*": components["schemas"]["ClientProfileDTO"];
+                };
+            };
+        };
+    };
+    deleteCurrentUserProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                clientId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateCurrentUserProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                clientId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClientProfileUpdateRequestDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ClientProfileDTO"];
                 };
             };
         };
@@ -1248,26 +1373,6 @@ export interface operations {
             };
         };
     };
-    getCurrentBusinessProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["BusinessDTO"];
-                };
-            };
-        };
-    };
     updateBusinessDetails: {
         parameters: {
             query?: never;
@@ -1309,9 +1414,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": {
-                        [key: string]: string;
-                    };
+                    "*/*": components["schemas"]["UserTypeDTO"];
                 };
             };
         };
@@ -1341,7 +1444,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                locationId: number;
             };
             cookie?: never;
         };
@@ -1354,6 +1457,75 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["LocationDetailDTO"];
+                };
+            };
+        };
+    };
+    getSportConfigurations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                locationId: number;
+                businessId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SportConfigurationDTO"][];
+                };
+            };
+        };
+    };
+    getOperatingHours: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OperatingHourDTO"][];
+                };
+            };
+        };
+    };
+    getFacilities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                locationId: number;
+                businessId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FacilityDTO"][];
                 };
             };
         };
@@ -1422,28 +1594,6 @@ export interface operations {
             };
         };
     };
-    getCurrentUserProfile: {
-        parameters: {
-            query?: never;
-            header: {
-                "X-User-Id": number;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ClientProfileDTO"];
-                };
-            };
-        };
-    };
     searchBusinesses: {
         parameters: {
             query?: never;
@@ -1469,7 +1619,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                businessId: number;
             };
             cookie?: never;
         };
@@ -1482,6 +1632,51 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["BusinessDTO"];
+                };
+            };
+        };
+    };
+    getAllLocationsForBusiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationResponse"][];
+                };
+            };
+        };
+    };
+    getLocationById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                businessId: number;
+                locationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LocationDetailDTO"];
                 };
             };
         };

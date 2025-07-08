@@ -2,10 +2,35 @@ import { useState } from "react";
 import { Spinner, Alert } from "flowbite-react";
 import ProfileHeader from "../../../../components/profile/business/ProfileHeader";
 import { useLocations } from "../../hooks/useLocation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
-export default function LocationProfilePage() {
-  const { locationDetails: location } = useLocations();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+export default function LocationProfilePage({
+  locationId,
+  businessId,
+}: {
+  locationId: number;
+  businessId: number;
+}) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LocationProfilePageRaw locationId={locationId} businessId={businessId} />
+    </QueryClientProvider>
+  );
+}
+
+function LocationProfilePageRaw({
+  locationId,
+  businessId,
+}: {
+  locationId: number;
+  businessId: number;
+}) {
+  const {
+    allLocations,
+    locationDetails: location,
+    isLoading: isRefreshing,
+  } = useLocations(businessId, locationId);
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8">

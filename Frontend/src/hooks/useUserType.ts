@@ -1,30 +1,24 @@
-import { useState, useEffect } from "react";
-import { getUserTypeFromBackend, type UserType } from "../lib/auth/authUtils";
+import { api } from "../types/api/fetch";
+
+type StatusMessage = {
+  type: "success" | "error";
+  message: string;
+} | null;
 
 export const useUserType = () => {
-  const [userType, setUserType] = useState<UserType | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    data: userType,
+    isLoading: isLoadingUserType,
+    error: errorLoadingUserType,
+  } = api.useQuery("get", "/api/user-type/", {
+    params: {
+      header: { "X-User-Id": 1 },
+    },
+  });
 
-  useEffect(() => {
-    const fetchUserType = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const type = await getUserTypeFromBackend();
-        setUserType(type);
-      } catch (err) {
-        console.error("Error fetching user type:", err);
-        setError("Could not determine user type. Please try again.");
-        setUserType(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserType();
-  }, []);
-
-  return { userType, loading, error };
+  return {
+    userType,
+    isLoadingUserType,
+    errorLoadingUserType,
+  };
 };

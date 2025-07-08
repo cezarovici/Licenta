@@ -3,11 +3,10 @@ import BusinessProfilePage from "../../../features/business-profile/BusinessProf
 
 const queryClient = new QueryClient();
 
-export default function ProfilePageProvider() {
-  // Componenta returnează pagina ta principală, dar învelită în provider.
+export default function ProfilePageProvider(accountId: number) {
   return (
     <QueryClientProvider client={queryClient}>
-      <BusinessProfilePage />
+      <BusinessProfilePage accountId={accountId} />
     </QueryClientProvider>
   );
 }

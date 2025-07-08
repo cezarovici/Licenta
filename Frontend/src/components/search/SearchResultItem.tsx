@@ -1,15 +1,22 @@
-import type { LocationSummaryDTO } from "../../lib/location/locationApi";
 import { Card, Button } from "flowbite-react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import type { LocationSummary } from "../../types/api";
+import { useState } from "react";
+import { useLocations } from "../../features/location-management/hooks/useLocation";
 
 interface SearchResultItemProps {
-  result: LocationSummaryDTO;
+  result: LocationSummary;
 }
 
 export default function SearchResultItem({ result }: SearchResultItemProps) {
+  const { locationDetails } = useLocations(undefined, result.id);
+  const [businessId, setBusinessId] = useState<number>(
+    locationDetails?.business.id || 0
+  );
+
   return (
     <Card
-      imgSrc={`https://source.unsplash.com/400x200/?stadium,gym,${result.name}`}
+      imgSrc={locationDetails?.photos[0].photoUrl || ""}
       imgAlt={`Imagine pentru ${result.name}`}
     >
       <h5 className="text-xl font-bold tracking-tight text-heading">
@@ -22,7 +29,7 @@ export default function SearchResultItem({ result }: SearchResultItemProps) {
       </div>
 
       <Button
-        href={`/locations/${result.id}`}
+        href={`/business/${businessId}/location-view/${result.id}`}
         className="mt-4"
         color="alternative"
       >

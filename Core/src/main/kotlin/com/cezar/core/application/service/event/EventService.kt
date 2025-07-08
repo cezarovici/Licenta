@@ -3,6 +3,7 @@ package com.cezar.core.application.service.event
 import com.cezar.core.application.dto.EventDetailDTO
 import com.cezar.core.application.dto.EventSummaryDTO
 import com.cezar.core.application.dto.event.CreateEventRequest
+import com.cezar.core.application.dto.event.UpdateEventRequest
 import com.cezar.core.domain.model.event.*
 import com.cezar.core.domain.repository.ClientRepository
 import com.cezar.core.domain.repository.EventParticipationRepository
@@ -24,6 +25,85 @@ class EventService(
     private val eventParticipationRepository: EventParticipationRepository
 ) {
 
+    /**
+     * Creează un eveniment nou.
+     * Creatorul evenimentului este adăugat automat ca participant.
+     */
+    fun createEvent(request: CreateEventRequest, creatorAccountId: Long): EventDetailDTO {
+        val creator = clientRepository.findByAccountId(creatorAccountId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Client creator not found for Account ID: $creatorAccountId")
+
+        val location = locationRepository.findById(request.locationId)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with ID: ${request.locationId}") }
+
+        val eventEntity = EventEntity(
+            title = request.title,
+            sport = request.sport,
+            eventDateTime = request.eventDateTime,
+            location = location,
+            type = request.eventType,
+            creator = creator,
+            durationInMinutes = 0,
+            totalBookingCost = BigDecimal.ZERO
+        )
+
+        val details = EventDetails(
+            description = request.description,
+            skillLevel = request.skillLevel ?: SkillLevel.ALL_LEVELS,
+        )
+        eventEntity.addDetails(details)
+
+        val participation = EventParticipation(event = eventEntity, client = creator)
+        eventEntity.addParticipation(participation)
+
+
+        val savedEvent = eventRepository.save(eventEntity)
+        return savedEvent.toDetailDTO()
+    }
+
+    /**
+     * Actualizează un eveniment existent.
+     * Doar creatorul evenimentului poate face această acțiune.
+     */
+    fun updateEvent(eventId: Long, request: UpdateEventRequest, clientAccountId: Long): EventDetailDTO {
+        val event = findEventAndVerifyOwnership(eventId, clientAccountId)
+
+        request.title?.let { event.title = it }
+        request.sport?.let { event.sport = it }
+        request.eventDateTime?.let { event.eventDateTime = it }
+        request.eventType?.let { event.type = it }
+
+        // Actualizează detaliile
+        request.description?.let { event.details?.description = it }
+        request.skillLevel?.let { event.details?.skillLevel = it }
+
+
+        val updatedEvent = eventRepository.save(event)
+        return updatedEvent.toDetailDTO()
+    }
+
+    /**
+     * Șterge un eveniment.
+     * Doar creatorul evenimentului poate face această acțiune.
+     */
+    fun deleteEvent(eventId: Long, clientAccountId: Long) {
+        val event = findEventAndVerifyOwnership(eventId, clientAccountId)
+        eventRepository.delete(event)
+    }
+
+    /**
+     * Metodă ajutătoare pentru a găsi un eveniment și a verifica dacă utilizatorul curent este creatorul.
+     */
+    private fun findEventAndVerifyOwnership(eventId: Long, clientAccountId: Long): EventEntity {
+        val event = eventRepository.findById(eventId)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found with ID: $eventId") }
+
+        if (event.creator.accountId != clientAccountId) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the creator of this event.")
+        }
+
+        return event
+    }
 
     /**
      * Găsește toate evenimentele publice viitoare.

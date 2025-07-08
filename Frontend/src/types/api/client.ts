@@ -6,3 +6,5 @@ export type ClientProfile = Schemas["ClientProfileDTO"];
 
 export type ClientRegisterPayload =
   Schemas["CompleteClientRegistrationRequest"];
+
+export type UpdateClientProfileDTO = Schemas["ClientProfileUpdateRequestDTO"];

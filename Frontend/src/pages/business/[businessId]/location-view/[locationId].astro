@@ -1,0 +1,20 @@
+---
+import Dashboard from "../../../../layouts/Dashboard.astro";
+import LocationPageView from "../../../../features/booking/components/LocationPageView";
+
+export const prerender = false;
+
+const { locationId: locationIdString, businessId: businessIdString } =
+  Astro.params;
+
+const locationId = locationIdString ? parseInt(locationIdString) : undefined;
+const businessId = businessIdString ? parseInt(businessIdString) : undefined;
+---
+
+<Dashboard title="Locatie">
+  <LocationPageView
+    locationId={locationId!}
+    businessId={businessId!}
+    client:load
+  />
+</Dashboard>
